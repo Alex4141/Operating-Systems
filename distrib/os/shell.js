@@ -49,6 +49,15 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+            // date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Returns the current date.");
+            this.commandList[this.commandList.length] = sc;
+            // whereami
+            sc = new TSOS.ShellCommand(this.shellLocale, "whereami", "- Returns your location.");
+            this.commandList[this.commandList.length] = sc;
+            // reverse <string>
+            sc = new TSOS.ShellCommand(this.shellReverse, "reverse", "<string> - Reverses the inputted string.");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -265,6 +274,27 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        };
+        Shell.prototype.shellDate = function (args) {
+            var date = new Date().toString();
+            _StdOut.putText(date);
+        };
+        Shell.prototype.shellLocale = function (args) {
+            var locations = ["Hancock", "Lowell Thomas", "Dyson", "Donnelly", "Cannavino Library", "New Science Building"];
+            var yourLocation = locations[Math.floor(Math.random() * locations.length)];
+            _StdOut.putText(yourLocation);
+        };
+        Shell.prototype.shellReverse = function (args) {
+            var initialString = "";
+            for (var argument in args) {
+                initialString += args[argument] + " ";
+            }
+            var toArray = initialString.split("");
+            var reversedString = "";
+            for (var i = toArray.length - 1; i >= 0; i--) {
+                reversedString += toArray[i];
+            }
+            _StdOut.putText(reversedString);
         };
         return Shell;
     }());

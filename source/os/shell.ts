@@ -79,6 +79,26 @@ module TSOS {
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
+            // date
+            sc = new ShellCommand(this.shellDate,
+                                    "date",
+                                    "- Returns the current date.");
+            this.commandList[this.commandList.length] = sc;
+
+
+            // whereami
+            sc = new ShellCommand(this.shellLocale,
+                                    "whereami",
+                                    "- Returns your location.");
+            this.commandList[this.commandList.length] = sc;
+            
+
+            // reverse <string>
+            sc = new ShellCommand(this.shellReverse,
+                                    "reverse",
+                                    "<string> - Reverses the inputted string.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -307,5 +327,32 @@ module TSOS {
             }
         }
 
+        public shellDate(args) {
+            var date: string = new Date().toString();
+            _StdOut.putText(date);
+        }
+
+        public shellLocale(args) {
+            var locations: string[] = ["Hancock", "Lowell Thomas", "Dyson", "Donnelly", "Cannavino Library", "New Science Building"];
+            var yourLocation: string = locations[Math.floor(Math.random() * locations.length)];
+            _StdOut.putText(yourLocation);    
+        }
+
+        public shellReverse(args) {
+            var initialString = ""
+            
+            for(var argument in args){
+                initialString += args[argument] + " ";
+            }
+            
+            var toArray: string[] = initialString.split("");
+            var reversedString: string = "";
+
+            for(var i: number = toArray.length - 1; i >= 0; i--){
+                reversedString += toArray[i];
+            }
+
+            _StdOut.putText(reversedString);
+        }
     }
 }
