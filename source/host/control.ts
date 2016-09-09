@@ -47,6 +47,15 @@ module TSOS {
             // Use the TypeScript cast to HTMLInputElement
             (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
 
+            // Sets the time and date on start
+            setInterval(function(){
+                var EST = new Date();
+                (<HTMLInputElement>document.getElementById("dateArea")).value = EST.toString(); 
+            }, 1000);
+
+            // Sets an inital status in the status textarea
+            (<HTMLInputElement>document.getElementById("statusArea")).value="OK";
+
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {

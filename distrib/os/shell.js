@@ -58,6 +58,9 @@ var TSOS;
             // reverse <string>
             sc = new TSOS.ShellCommand(this.shellReverse, "reverse", "<string> - Reverses the inputted string.");
             this.commandList[this.commandList.length] = sc;
+            // status <string>
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Updates the status of the OS");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -295,6 +298,14 @@ var TSOS;
                 reversedString += toArray[i];
             }
             _StdOut.putText(reversedString);
+        };
+        Shell.prototype.shellStatus = function (args) {
+            var status = "";
+            for (var argument in args) {
+                status += args[argument] + " ";
+            }
+            document.getElementById("statusArea").value = status;
+            _StdOut.putText("Status: " + status);
         };
         return Shell;
     }());

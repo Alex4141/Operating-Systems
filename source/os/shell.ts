@@ -99,6 +99,13 @@ module TSOS {
                                     "<string> - Reverses the inputted string.");
             this.commandList[this.commandList.length] = sc;
 
+            // status <string>
+            sc = new ShellCommand(this.shellStatus,
+                                    "status",
+                                    "<string> - Updates the status of the OS"
+                                    );
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -339,7 +346,7 @@ module TSOS {
         }
 
         public shellReverse(args) {
-            var initialString = ""
+            var initialString = "";
             
             for(var argument in args){
                 initialString += args[argument] + " ";
@@ -353,6 +360,17 @@ module TSOS {
             }
 
             _StdOut.putText(reversedString);
+        }
+
+        public shellStatus(args) {
+            var status: string = "";
+
+            for(var argument in args){
+                status += args[argument] + " ";
+            }
+
+            (<HTMLInputElement> document.getElementById("statusArea")).value = status;
+            _StdOut.putText("Status: " + status);   
         }
     }
 }
