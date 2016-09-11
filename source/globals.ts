@@ -31,6 +31,8 @@ var _OSclock: number = 0;  // Page 23.
 
 var _Mode: number = 0;     // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 
+var uniqueKeys: number[] = [186,187,188,189,190,191,192,219,221,222];
+
 var _Canvas: HTMLCanvasElement;         // Initialized in Control.hostInit().
 var _CanvasDiv: HTMLDivElement;
 var _DrawingContext: any; // = _Canvas.getContext("2d");  // Assigned here for type safety, but re-initialized in Control.hostInit() for OCD and logic.
