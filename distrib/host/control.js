@@ -47,6 +47,8 @@ var TSOS;
             }, 1000);
             // Sets an inital status in the status textarea
             document.getElementById("statusArea").value = "OK";
+            //Initialize this variable for scrolling
+            _CanvasDiv = document.getElementById("divConsole");
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {

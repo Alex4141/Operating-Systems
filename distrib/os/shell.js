@@ -61,6 +61,9 @@ var TSOS;
             // status <string>
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Updates the status of the OS");
             this.commandList[this.commandList.length] = sc;
+            // bsod
+            sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Blue screen of death for kernel error");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -306,6 +309,9 @@ var TSOS;
             }
             document.getElementById("statusArea").value = status;
             _StdOut.putText("Status: " + status);
+        };
+        Shell.prototype.shellBSOD = function (args) {
+            _Kernel.krnTrapError("BSOD");
         };
         return Shell;
     }());

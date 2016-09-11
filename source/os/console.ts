@@ -75,7 +75,7 @@ module TSOS {
          }
 
         public advanceLine(): void {
-            this.currentXPosition = 0;
+            this.currentXPosition = 1;
             /*
              * Font size measures from the baseline to the highest point in the font.
              * Font descent measures from the baseline to the lowest point in the font.

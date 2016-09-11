@@ -102,8 +102,13 @@ module TSOS {
             // status <string>
             sc = new ShellCommand(this.shellStatus,
                                     "status",
-                                    "<string> - Updates the status of the OS"
-                                    );
+                                    "<string> - Updates the status of the OS");
+            this.commandList[this.commandList.length] = sc;
+
+            // bsod
+            sc = new ShellCommand(this.shellBSOD,
+                                    "bsod",
+                                    "- Blue screen of death for kernel error");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -371,6 +376,10 @@ module TSOS {
 
             (<HTMLInputElement> document.getElementById("statusArea")).value = status;
             _StdOut.putText("Status: " + status);   
+        }
+
+        public shellBSOD(args){
+            _Kernel.krnTrapError("BSOD");
         }
     }
 }
