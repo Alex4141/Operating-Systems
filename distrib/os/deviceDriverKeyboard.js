@@ -51,13 +51,19 @@ var TSOS;
                 _KernelInputQueue.enqueue(chr);
             }
             else if (((keyCode >= 48) && (keyCode <= 57)) ||
-                (keyCode == 32) ||
+                (keyCode == 8) ||
                 (keyCode == 13)) {
                 if (isShifted) {
                     chr = this.shiftHandler(keyCode, chr);
                     _KernelInputQueue.enqueue(chr);
                 }
                 else {
+                    chr = String.fromCharCode(keyCode);
+                    _KernelInputQueue.enqueue(chr);
+                }
+            }
+            else if (keyCode == 32) {
+                if (!isShifted) {
                     chr = String.fromCharCode(keyCode);
                     _KernelInputQueue.enqueue(chr);
                 }

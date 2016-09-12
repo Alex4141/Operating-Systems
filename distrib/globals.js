@@ -24,6 +24,7 @@ var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is 
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var uniqueKeys = [186, 187, 188, 189, 190, 191, 192, 219, 221, 222];
+var backProcessor = [];
 var _Canvas; // Initialized in Control.hostInit().
 var _CanvasDiv;
 var _DrawingContext; // = _Canvas.getContext("2d");  // Assigned here for type safety, but re-initialized in Control.hostInit() for OCD and logic.

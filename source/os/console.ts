@@ -1,4 +1,5 @@
 ///<reference path="../globals.ts" />
+///<reference path="canvastext.ts" />
 
 /* ------------
      Console.ts
@@ -15,7 +16,7 @@ module TSOS {
 
         constructor(public currentFont = _DefaultFontFamily,
                     public currentFontSize = _DefaultFontSize,
-                    public currentXPosition = 0,
+                    public currentXPosition = 18,
                     public currentYPosition = _DefaultFontSize,
                     public buffer = "") {
         }
@@ -45,12 +46,31 @@ module TSOS {
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
+                } else if(chr === String.fromCharCode(8)){
+                // Access the width of the symbol needed
+                var i = CanvasTextFunctions.symbols[backProcessor[backProcessor.length - 1]].width;
+                // Get the offset to relocate X 
+                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, backProcessor[backProcessor.length - 1]);   
+               
+                _DrawingContext.clearRect(this.currentXPosition - (i - offset), this.currentYPosition - 14, _Canvas.width, _Canvas.height);
+                
+                // Relocating X
+                if(this.currentXPosition - offset > 20){
+                    this.currentXPosition = this.currentXPosition - offset - 0.07692307692;
                 } else {
+                    this.currentXPosition = 20;
+                }
+                
+                backProcessor.pop();
+                this.buffer = this.buffer.substring(0, this.buffer.length - 1);     
+                } else {
+                    backProcessor.push(chr);
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
                     // ... and add it to our buffer.
                     this.buffer += chr;
+                    
                 }
                 // TODO: Write a case for Ctrl-C.
             }
