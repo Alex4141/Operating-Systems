@@ -52,6 +52,7 @@ var TSOS;
             }
             else if (((keyCode >= 48) && (keyCode <= 57)) ||
                 (keyCode == 8) ||
+                (keyCode == 9) ||
                 (keyCode == 13)) {
                 if (isShifted) {
                     chr = this.shiftHandler(keyCode, chr);

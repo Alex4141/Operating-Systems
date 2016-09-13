@@ -1,5 +1,6 @@
 ///<reference path="../globals.ts" />
 ///<reference path="canvastext.ts" />
+///<reference path="shell.ts" />
 /* ------------
      Console.ts
 
@@ -14,7 +15,7 @@ var TSOS;
         function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
-            if (currentXPosition === void 0) { currentXPosition = 18; }
+            if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
             this.currentFont = currentFont;
@@ -47,23 +48,24 @@ var TSOS;
                     this.buffer = "";
                 }
                 else if (chr === String.fromCharCode(8)) {
-                    // Access the width of the symbol needed
-                    var i = TSOS.CanvasTextFunctions.symbols[backProcessor[backProcessor.length - 1]].width;
-                    // Get the offset to relocate X 
-                    var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, backProcessor[backProcessor.length - 1]);
-                    _DrawingContext.clearRect(this.currentXPosition - (i - offset), this.currentYPosition - 14, _Canvas.width, _Canvas.height);
-                    // Relocating X
-                    if (this.currentXPosition - offset > 20) {
-                        this.currentXPosition = this.currentXPosition - offset - 0.07692307692;
+                    _StdOut.popText();
+                }
+                else if (chr == String.fromCharCode(9)) {
+                    var re = new RegExp("^" + this.buffer);
+                    for (var commands in allCommands) {
+                        if (allCommands[commands].match(re) && re.toString() != "/^/" && allCommands[commands] != re.toString()) {
+                            while (this.buffer != "") {
+                                _StdOut.popText();
+                            }
+                            var temp = allCommands[commands].split("");
+                            for (var ch in temp) {
+                                _StdOut.putText(temp[ch]);
+                                this.buffer += temp[ch];
+                            }
+                        }
                     }
-                    else {
-                        this.currentXPosition = 20;
-                    }
-                    backProcessor.pop();
-                    this.buffer = this.buffer.substring(0, this.buffer.length - 1);
                 }
                 else {
-                    backProcessor.push(chr);
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
@@ -87,6 +89,15 @@ var TSOS;
                 // Move the current X position.
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
                 this.currentXPosition = this.currentXPosition + offset;
+            }
+        };
+        Console.prototype.popText = function () {
+            if (this.buffer != "") {
+                var toRemove = this.buffer.slice(-1);
+                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, toRemove);
+                _DrawingContext.clearRect(this.currentXPosition - offset, this.currentYPosition - 14, _Canvas.width, _Canvas.height);
+                this.currentXPosition = this.currentXPosition - offset;
+                this.buffer = this.buffer.substring(0, this.buffer.length - 1);
             }
         };
         Console.prototype.advanceLine = function () {
