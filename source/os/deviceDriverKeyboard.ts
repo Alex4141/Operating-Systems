@@ -52,6 +52,8 @@ module TSOS {
             } else if (((keyCode >= 48) && (keyCode <= 57)) ||   // digits
                         (keyCode == 8)                      ||   // backspace
                         (keyCode == 9)                      ||   // tab
+                        (keyCode == 38)                     ||   // up arrow key
+                        (keyCode == 40)                     ||   // down arrow key
                         (keyCode == 13)) {                       // enter
                 if(isShifted){
                     chr = this.shiftHandler(keyCode, chr);

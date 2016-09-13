@@ -25,6 +25,8 @@ var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var uniqueKeys = [186, 187, 188, 189, 190, 191, 192, 219, 221, 222]; // keyCodes for Keyboard keys with unique handling
 var allCommands = []; // Global accessor for all of the string values of our commands
+var commandHistory = []; // All the commands
+var commandCycle = 0;
 var _Canvas; // Initialized in Control.hostInit().
 var _CanvasDiv;
 var _DrawingContext; // = _Canvas.getContext("2d");  // Assigned here for type safety, but re-initialized in Control.hostInit() for OCD and logic.

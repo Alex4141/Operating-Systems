@@ -46,6 +46,8 @@ module TSOS {
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
+                    commandHistory.push(this.buffer);
+                    commandCycle = 0;
                     this.buffer = "";
                 } else if(chr === String.fromCharCode(8)){
                      _StdOut.popText();
@@ -63,6 +65,10 @@ module TSOS {
                             }
                         }
                     }
+                } else if(chr == String.fromCharCode(38)){
+                    this.shiftForward();    
+                } else if (chr == String.fromCharCode(40)){
+                    this.shiftBack();
                 } else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -102,6 +108,47 @@ module TSOS {
                 this.buffer = this.buffer.substring(0, this.buffer.length - 1);
             }
          }
+
+        public shiftForward(): void {
+            (<HTMLInputElement> document.getElementById("statusArea")).value = commandCycle.toString();
+            while(this.buffer != ""){
+                _StdOut.popText();
+            }
+
+            commandCycle++;
+
+            if(commandCycle > commandHistory.length){
+                commandCycle = commandHistory.length;
+            }
+
+            if(commandHistory.length > 0 && commandCycle <= commandHistory.length){
+                var getCommand = commandHistory[commandHistory.length - commandCycle].split("");
+                for(var ch in getCommand){
+                    _StdOut.putText(getCommand[ch]);
+                    this.buffer += getCommand[ch];
+                }
+            }   
+        } 
+        
+        public shiftBack(){
+            (<HTMLInputElement> document.getElementById("statusArea")).value = commandCycle.toString();
+            while(this.buffer != ""){
+                _StdOut.popText();
+            }
+
+            commandCycle--;
+
+            if(commandHistory.length > 0 && commandCycle <= commandHistory.length && commandCycle > 0){
+                var getCommand = commandHistory[commandHistory.length - commandCycle].split("");
+                for(var ch in getCommand){
+                    _StdOut.putText(getCommand[ch]);
+                    this.buffer += getCommand[ch];
+                }
+                if(commandCycle <= 0){
+                    commandCycle++;
+                }
+            } 
+        }
 
         public advanceLine(): void {
             this.currentXPosition = 1;

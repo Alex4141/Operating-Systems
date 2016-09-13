@@ -33,6 +33,8 @@ var _Mode: number = 0;     // (currently unused)  0 = Kernel Mode, 1 = User Mode
 
 var uniqueKeys: number[] = [186,187,188,189,190,191,192,219,221,222];	// keyCodes for Keyboard keys with unique handling
 var allCommands: string[] = [];											// Global accessor for all of the string values of our commands
+var commandHistory: string[] = [];										// All the commands
+var commandCycle: number = 0;
 
 var _Canvas: HTMLCanvasElement;         // Initialized in Control.hostInit().
 var _CanvasDiv: HTMLDivElement;
