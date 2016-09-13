@@ -109,7 +109,6 @@ var TSOS;
             }
         };
         Console.prototype.shiftForward = function () {
-            document.getElementById("statusArea").value = commandCycle.toString();
             while (this.buffer != "") {
                 _StdOut.popText();
             }
@@ -126,19 +125,20 @@ var TSOS;
             }
         };
         Console.prototype.shiftBack = function () {
-            document.getElementById("statusArea").value = commandCycle.toString();
             while (this.buffer != "") {
                 _StdOut.popText();
             }
-            commandCycle--;
+            if (commandCycle <= 0) {
+                commandCycle = 0;
+            }
+            else {
+                commandCycle--;
+            }
             if (commandHistory.length > 0 && commandCycle <= commandHistory.length && commandCycle > 0) {
                 var getCommand = commandHistory[commandHistory.length - commandCycle].split("");
                 for (var ch in getCommand) {
                     _StdOut.putText(getCommand[ch]);
                     this.buffer += getCommand[ch];
-                }
-                if (commandCycle <= 0) {
-                    commandCycle++;
                 }
             }
         };

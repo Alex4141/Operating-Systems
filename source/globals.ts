@@ -34,10 +34,10 @@ var _Mode: number = 0;     // (currently unused)  0 = Kernel Mode, 1 = User Mode
 var uniqueKeys: number[] = [186,187,188,189,190,191,192,219,221,222];	// keyCodes for Keyboard keys with unique handling
 var allCommands: string[] = [];											// Global accessor for all of the string values of our commands
 var commandHistory: string[] = [];										// All the commands
-var commandCycle: number = 0;
+var commandCycle: number = 0;											// Used to shift through command history
 
 var _Canvas: HTMLCanvasElement;         // Initialized in Control.hostInit().
-var _CanvasDiv: HTMLDivElement;
+var _CanvasDiv: HTMLDivElement;			// Initialized in Control.hostInit().
 var _DrawingContext: any; // = _Canvas.getContext("2d");  // Assigned here for type safety, but re-initialized in Control.hostInit() for OCD and logic.
 var _DefaultFontFamily: string = "sans";        // Ignored, I think. The was just a place-holder in 2008, but the HTML canvas may have use for it.
 var _DefaultFontSize: number = 13;

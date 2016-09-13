@@ -110,13 +110,12 @@ module TSOS {
          }
 
         public shiftForward(): void {
-            (<HTMLInputElement> document.getElementById("statusArea")).value = commandCycle.toString();
             while(this.buffer != ""){
                 _StdOut.popText();
             }
 
             commandCycle++;
-
+            
             if(commandCycle > commandHistory.length){
                 commandCycle = commandHistory.length;
             }
@@ -131,21 +130,21 @@ module TSOS {
         } 
         
         public shiftBack(){
-            (<HTMLInputElement> document.getElementById("statusArea")).value = commandCycle.toString();
             while(this.buffer != ""){
                 _StdOut.popText();
             }
 
-            commandCycle--;
+            if(commandCycle <= 0){
+                commandCycle = 0;
+            } else {
+                commandCycle--;
+            }
 
             if(commandHistory.length > 0 && commandCycle <= commandHistory.length && commandCycle > 0){
                 var getCommand = commandHistory[commandHistory.length - commandCycle].split("");
                 for(var ch in getCommand){
                     _StdOut.putText(getCommand[ch]);
                     this.buffer += getCommand[ch];
-                }
-                if(commandCycle <= 0){
-                    commandCycle++;
                 }
             } 
         }

@@ -77,6 +77,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Blue screen of death for kernel error");
             this.commandList[this.commandList.length] = sc;
             allCommands.push(sc.command);
+            // load
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Verifies that the Program Input is valid hex");
+            this.commandList[this.commandList.length] = sc;
+            allCommands.push(sc.command);
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -325,6 +329,15 @@ var TSOS;
         };
         Shell.prototype.shellBSOD = function (args) {
             _Kernel.krnTrapError("BSOD");
+        };
+        Shell.prototype.shellLoad = function (args) {
+            var inputMatch = document.getElementById("taProgramInput");
+            if (inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
+                _StdOut.putText("Invalid Input");
+            }
+            else {
+                _StdOut.putText("Valid Input");
+            }
         };
         return Shell;
     }());
