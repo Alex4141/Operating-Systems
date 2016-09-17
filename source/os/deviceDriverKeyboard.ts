@@ -67,7 +67,7 @@ module TSOS {
                     chr = String.fromCharCode(keyCode);
                     _KernelInputQueue.enqueue(chr); 
                 }
-            } else if (uniqueKeys.indexOf(keyCode) > -1){    //Some punctuation keys
+            } else if (_UniqueKeys.indexOf(keyCode) > -1){    //Some punctuation keys
                 if(isShifted){
                     chr = this.shiftHandler(keyCode, chr);
                     _KernelInputQueue.enqueue(chr);

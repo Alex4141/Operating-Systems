@@ -36,91 +36,91 @@ module TSOS {
                                   "ver",
                                   "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // help
             sc = new ShellCommand(this.shellHelp,
                                   "help",
                                   "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // shutdown
             sc = new ShellCommand(this.shellShutdown,
                                   "shutdown",
                                   "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // cls
             sc = new ShellCommand(this.shellCls,
                                   "cls",
                                   "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // man <topic>
             sc = new ShellCommand(this.shellMan,
                                   "man",
                                   "<topic> - Displays the MANual page for <topic>.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // trace <on | off>
             sc = new ShellCommand(this.shellTrace,
                                   "trace",
                                   "<on | off> - Turns the OS trace on or off.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // rot13 <string>
             sc = new ShellCommand(this.shellRot13,
                                   "rot13",
                                   "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
                                   "prompt",
                                   "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // date
             sc = new ShellCommand(this.shellDate,
                                     "date",
                                     "- Returns the current date.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // whereami
             sc = new ShellCommand(this.shellLocale,
                                     "whereami",
                                     "- Returns your location.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // reverse <string>
             sc = new ShellCommand(this.shellReverse,
                                     "reverse",
                                     "<string> - Reverses the inputted string.");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // status <string>
             sc = new ShellCommand(this.shellStatus,
                                     "status",
                                     "<string> - Updates the status of the OS");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
             // bsod
             sc = new ShellCommand(this.shellBSOD,
                                     "bsod",
                                     "- Blue screen of death for kernel error");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);
+            _AllCommands.push(sc.command);
 
 
             // load
@@ -128,7 +128,7 @@ module TSOS {
                                     "load",
                                     "- Verifies that the Program Input is valid hex");
             this.commandList[this.commandList.length] = sc;
-            allCommands.push(sc.command);            
+            _AllCommands.push(sc.command);            
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -307,6 +307,24 @@ module TSOS {
                         break;
                     case "prompt":
                         _StdOut.putText("Prompt sets the value of the input prompt.");
+                        break;
+                    case "date":
+                        _StdOut.putText("Date provides the current date");
+                        break;
+                    case "whereami":
+                        _StdOut.putText("Whereami gives you your location on campus, then teleports you (Potentially)");    
+                        break;
+                    case "reverse":
+                        _StdOut.putText("Reverse returns the result of reversing the input string");
+                        break;
+                    case "status":
+                        _StdOut.putText("Status updates the status of the OS to the input string");
+                        break;
+                    case "bsod":
+                        _StdOut.putText("BSOD returns the blue screen of death error message");
+                        break;
+                    case "load":
+                        _StdOut.putText("Load verifies that program input is hex");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");

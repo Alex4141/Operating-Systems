@@ -71,7 +71,7 @@ var TSOS;
                     _KernelInputQueue.enqueue(chr);
                 }
             }
-            else if (uniqueKeys.indexOf(keyCode) > -1) {
+            else if (_UniqueKeys.indexOf(keyCode) > -1) {
                 if (isShifted) {
                     chr = this.shiftHandler(keyCode, chr);
                     _KernelInputQueue.enqueue(chr);

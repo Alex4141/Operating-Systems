@@ -45,8 +45,8 @@ var TSOS;
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
-                    commandHistory.push(this.buffer);
-                    commandCycle = 0;
+                    _CommandHistory.push(this.buffer);
+                    _CommandCycle = 0;
                     this.buffer = "";
                 }
                 else if (chr === String.fromCharCode(8)) {
@@ -54,12 +54,12 @@ var TSOS;
                 }
                 else if (chr == String.fromCharCode(9)) {
                     var re = new RegExp("^" + this.buffer);
-                    for (var commands in allCommands) {
-                        if (allCommands[commands].match(re) && re.toString() != "/^/" && allCommands[commands] != re.toString()) {
+                    for (var commands in _AllCommands) {
+                        if (_AllCommands[commands].match(re) && re.toString() != "/^/" && _AllCommands[commands] != re.toString()) {
                             while (this.buffer != "") {
                                 _StdOut.popText();
                             }
-                            var temp = allCommands[commands].split("");
+                            var temp = _AllCommands[commands].split("");
                             for (var ch in temp) {
                                 _StdOut.putText(temp[ch]);
                                 this.buffer += temp[ch];
@@ -112,12 +112,12 @@ var TSOS;
             while (this.buffer != "") {
                 _StdOut.popText();
             }
-            commandCycle++;
-            if (commandCycle > commandHistory.length) {
-                commandCycle = commandHistory.length;
+            _CommandCycle++;
+            if (_CommandCycle > _CommandHistory.length) {
+                _CommandCycle = _CommandHistory.length;
             }
-            if (commandHistory.length > 0 && commandCycle <= commandHistory.length) {
-                var getCommand = commandHistory[commandHistory.length - commandCycle].split("");
+            if (_CommandHistory.length > 0 && _CommandCycle <= _CommandHistory.length) {
+                var getCommand = _CommandHistory[_CommandHistory.length - _CommandCycle].split("");
                 for (var ch in getCommand) {
                     _StdOut.putText(getCommand[ch]);
                     this.buffer += getCommand[ch];
@@ -128,14 +128,14 @@ var TSOS;
             while (this.buffer != "") {
                 _StdOut.popText();
             }
-            if (commandCycle <= 0) {
-                commandCycle = 0;
+            if (_CommandCycle <= 0) {
+                _CommandCycle = 0;
             }
             else {
-                commandCycle--;
+                _CommandCycle--;
             }
-            if (commandHistory.length > 0 && commandCycle <= commandHistory.length && commandCycle > 0) {
-                var getCommand = commandHistory[commandHistory.length - commandCycle].split("");
+            if (_CommandHistory.length > 0 && _CommandCycle <= _CommandHistory.length && _CommandCycle > 0) {
+                var getCommand = _CommandHistory[_CommandHistory.length - _CommandCycle].split("");
                 for (var ch in getCommand) {
                     _StdOut.putText(getCommand[ch]);
                     this.buffer += getCommand[ch];
@@ -152,7 +152,13 @@ var TSOS;
             this.currentYPosition += _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            // TODO: Handle scrolling. (iProject 1)
+            // Scrolls when the Y position to put next command is greater than the Canvas (ie not visible)
+            if (this.currentYPosition > _Canvas.height) {
+                var currentState = _DrawingContext.getImageData(0, 20, _Canvas.width, _Canvas.height);
+                this.clearScreen();
+                this.currentYPosition -= (_DefaultFontSize + _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) + _FontHeightMargin);
+                _DrawingContext.putImageData(currentState, 0, 0);
+            }
         };
         return Console;
     }());
