@@ -2,6 +2,7 @@
 ///<reference path="../utils.ts" />
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
+///<reference path="PCB.ts" />
 
 
 /* ------------
@@ -419,8 +420,8 @@ module TSOS {
         }
 
         public shellLoad(args){
-            var inputMatch = (<HTMLTextAreaElement>document.getElementById("taProgramInput"));
-            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
+           var inputMatch = (<HTMLTextAreaElement>document.getElementById("taProgramInput"));
+           if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
                 _StdOut.putText("Valid Input");

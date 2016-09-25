@@ -32,9 +32,11 @@ var _OSclock: number = 0;  // Page 23.
 var _Mode: number = 0;     // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 
 var _UniqueKeys: number[] = [186,187,188,189,190,191,192,219,221,222];	// keyCodes for Keyboard keys with unique handling
-var _AllCommands: string[] = [];											// Global accessor for all of the string values of our commands
+var _AllCommands: string[] = [];										// Global accessor for all of the string values of our commands
 var _CommandHistory: string[] = [];										// All the commands
 var _CommandCycle: number = 0;											// Used to shift through command history
+
+var _PCBContainer = [];											// Holds all created PCB's
 
 var _Canvas: HTMLCanvasElement;         // Initialized in Control.hostInit().
 var _CanvasDiv: HTMLDivElement;			// Initialized in Control.hostInit().
