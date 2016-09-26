@@ -1,3 +1,6 @@
+/*
+Implementation of Main Memory
+*/
 var TSOS;
 (function (TSOS) {
     var coreMemory = (function () {

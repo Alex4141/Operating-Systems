@@ -42,6 +42,30 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            this.isExecuting = true;
+            for (var i = 0; i <= 10; i++) {
+                //Handlers for STA and LDA op codes
+                //TODO: Making sure completed op code isn't repeated
+                switch (_Memory.addressSpace[i]) {
+                    case "A9":
+                        this.Acc = parseInt(_Memory.addressSpace[i + 1], 16);
+                        _Kernel.krnTrace('A9: Accumulator loaded');
+                        break;
+                    case "AD":
+                        var value = parseInt(_Memory.addressSpace[i + 1], 16);
+                        this.Acc = parseInt(_Memory.addressSpace[value], 16);
+                        _Kernel.krnTrace('AD: Accumulator loaded');
+                        break;
+                    case "8D":
+                        var value = parseInt(_Memory.addressSpace[i + 1], 16);
+                        _Memory.addressSpace[value] = this.Acc.toString(16).toUpperCase();
+                        _Kernel.krnTrace('8D: Accumulator stored');
+                        break;
+                    default:
+                        break;
+                }
+                this.isExecuting = false;
+            }
         };
         return Cpu;
     }());
