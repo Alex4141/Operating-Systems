@@ -4,7 +4,6 @@
 ///<reference path="userCommand.ts" />
 ///<reference path="PCB.ts" />
 
-
 /* ------------
    Shell.ts
 
@@ -424,7 +423,7 @@ module TSOS {
            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
-                _StdOut.putText("Valid Input");
+                _StdOut.putText("Valid Input");               
             }
         }
     }
