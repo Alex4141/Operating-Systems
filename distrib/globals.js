@@ -21,7 +21,8 @@ var KEYBOARD_IRQ = 1;
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
 var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
-var _Memory; // Make sure _Memory is an instance of the Memory class.
+var _Memory; // Ensures _Memory is an instance of the Memory class.
+var _MemoryManager; // Ensures _MemoryManager is an instance of MemoryManager class.
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _UniqueKeys = [186, 187, 188, 189, 190, 191, 192, 219, 221, 222]; // keyCodes for Keyboard keys with unique handling

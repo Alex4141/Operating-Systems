@@ -423,7 +423,17 @@ module TSOS {
            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
-                _StdOut.putText("Valid Input");
+                if(_PCBContainer.length == 0){
+                    // Create a new Process Control Block, because this process is valid
+                    var temp = new PCB();
+                    //Make an array of the input split it by space
+                    var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                    // Load Memory with the validated input.
+                    _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
+                    _StdOut.putText("New process created. PID: " + temp.pid);
+                } else {
+                    _StdOut.putText("No free memory left!");
+                }
             }
         }
     }
