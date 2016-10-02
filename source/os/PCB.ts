@@ -12,7 +12,7 @@ module TSOS {
 					public programCounter: number = 0,
 					public baseRegister: number = _PCBContainer.length * 256,
 					public limitRegister: number = baseRegister + 255,
-					
+					public memorySegementAmount: number = 0,
 					/*
 					These vars below will be important later on when switching between processes
 					But for now, less prevalent on current project

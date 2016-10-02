@@ -6,7 +6,7 @@ Includes important details about each process loaded into memory
 var TSOS;
 (function (TSOS) {
     var PCB = (function () {
-        function PCB(processState, pid, programCounter, baseRegister, limitRegister, 
+        function PCB(processState, pid, programCounter, baseRegister, limitRegister, memorySegementAmount, 
             /*
             These vars below will be important later on when switching between processes
             But for now, less prevalent on current project
@@ -18,6 +18,7 @@ var TSOS;
             if (programCounter === void 0) { programCounter = 0; }
             if (baseRegister === void 0) { baseRegister = _PCBContainer.length * 256; }
             if (limitRegister === void 0) { limitRegister = baseRegister + 255; }
+            if (memorySegementAmount === void 0) { memorySegementAmount = 0; }
             if (PCstate === void 0) { PCstate = 0; }
             if (AccState === void 0) { AccState = 0; }
             if (XregState === void 0) { XregState = 0; }
@@ -28,6 +29,7 @@ var TSOS;
             this.programCounter = programCounter;
             this.baseRegister = baseRegister;
             this.limitRegister = limitRegister;
+            this.memorySegementAmount = memorySegementAmount;
             this.PCstate = PCstate;
             this.AccState = AccState;
             this.XregState = XregState;

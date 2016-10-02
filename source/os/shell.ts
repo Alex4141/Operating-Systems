@@ -128,7 +128,15 @@ module TSOS {
                                     "load",
                                     "- Verifies that the Program Input is valid hex");
             this.commandList[this.commandList.length] = sc;
-            _AllCommands.push(sc.command);            
+            _AllCommands.push(sc.command); 
+
+            // run
+            sc = new ShellCommand(this.shellRun,
+                                    "run",
+                                    "<int> - Runs the program loaded into memory");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -419,7 +427,10 @@ module TSOS {
         }
 
         public shellLoad(args){
+
            var inputMatch = (<HTMLTextAreaElement>document.getElementById("taProgramInput"));
+           
+           //Check that our input is valid hex
            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
@@ -428,6 +439,7 @@ module TSOS {
                     var temp = new PCB();
                     //Make an array of the input split it by space
                     var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                    temp.memorySegementAmount = forMemory.length - 1;
                     // Load Memory with the validated input.
                     _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
                     _StdOut.putText("New process created. PID: " + temp.pid);
@@ -436,5 +448,53 @@ module TSOS {
                 }
             }
         }
+
+        public shellRun(args){
+            // Get the PID entered
+            var processSelected = args[0];
+            var current;
+            var limit;
+
+            // Make sure the pid is valid for a given input
+            if(processSelected > _PCBContainer.length - 1){
+                _StdOut.putText("Invalid PID");
+            } else {
+
+                // Set the virtual addresses that the particular process is limited to 
+                current = _PCBContainer[processSelected].baseRegister;
+                limit = _PCBContainer[processSelected].memorySegementAmount;
+                
+                while(current <= limit){
+                    switch(_Memory.addressSpace[current]){
+                        case "A9":
+                            var forAccumulator = parseInt(_Memory.addressSpace[current + 1], 16);
+                            _CPU.setAccumulator(forAccumulator);
+                            _CPU.cycle();
+                            _Kernel.krnTrace('A9');
+                            current += 2;
+                            break;
+                        case "AD":
+                            var addressPointer = parseInt(_Memory.addressSpace[current + 1],16);
+                            var forAccumulator = parseInt(_Memory.addressSpace[addressPointer],16);
+                            _CPU.setAccumulator(forAccumulator);
+                            _CPU.cycle();
+                            _Kernel.krnTrace('AD');
+                            current += 3;
+                            break;
+                        case "8D":
+                            var forMemory = parseInt(_Memory.addressSpace[current + 1],16);
+                            _CPU.storeAccumulator(forMemory);
+                            _CPU.cycle();
+                            _Kernel.krnTrace('8D');
+                            current += 3;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+
     }
 }
