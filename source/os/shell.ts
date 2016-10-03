@@ -471,7 +471,23 @@ module TSOS {
                             Shell.prototype.updateDisplay(base);
                             break;
                         case "8D":
-                            _CPU.opCode8D(base + 1);
+                            _CPU.opCode8D(base+1);
+                            Shell.prototype.updateDisplay(base);
+                            break;
+                        case "A2":
+                            _CPU.opCodeA2(base+1);
+                            Shell.prototype.updateDisplay(base);
+                            break;
+                        case "AE":
+                            _CPU.opCodeAE(base+1);
+                            Shell.prototype.updateDisplay(base);
+                            break;
+                        case "A0":
+                            _CPU.opCodeA0(base+1);
+                            Shell.prototype.updateDisplay(base);
+                            break;
+                        case "AC":
+                            _CPU.opCodeAC(base+1);
                             Shell.prototype.updateDisplay(base);
                             break;
                         default:

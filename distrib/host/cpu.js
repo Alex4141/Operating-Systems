@@ -75,6 +75,42 @@ var TSOS;
                 alert("OP CODE ERROR: 8D");
             }
         };
+        Cpu.prototype.opCodeA2 = function (memoryLocation) {
+            var memory = memoryLocation;
+            var value = parseInt(_Memory.addressSpace[memory], 16);
+            this.Xreg = value;
+            this.PC += 2;
+        };
+        Cpu.prototype.opCodeAE = function (memoryLocation) {
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+            if (_Memory.addressSpace[memory + 1] == "00") {
+                this.Xreg = value;
+                this.PC += 3;
+            }
+            else {
+                alert("OP CODE ERROR: AE");
+            }
+        };
+        Cpu.prototype.opCodeA0 = function (memoryLocation) {
+            var memory = memoryLocation;
+            var value = parseInt(_Memory.addressSpace[memory], 16);
+            this.Yreg = value;
+            this.PC += 2;
+        };
+        Cpu.prototype.opCodeAC = function (memoryLocation) {
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+            if (_Memory.addressSpace[memory + 1] == "00") {
+                this.Yreg = value;
+                this.PC += 3;
+            }
+            else {
+                alert("OP CODE ERROR: AC");
+            }
+        };
         return Cpu;
     }());
     TSOS.Cpu = Cpu;

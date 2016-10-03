@@ -76,5 +76,43 @@ module TSOS {
                 alert("OP CODE ERROR: 8D");
             }
         }
+
+        public opCodeA2(memoryLocation){
+            var memory = memoryLocation;
+            var value = parseInt(_Memory.addressSpace[memory],16);
+            this.Xreg = value;
+            this.PC += 2;   
+        }
+
+        public opCodeAE(memoryLocation){
+            var memory= memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16);
+            var value = parseInt(_Memory.addressSpace[addressPointer],16);
+             if(_Memory.addressSpace[memory+1] == "00"){
+                this.Xreg = value;    
+                this.PC += 3;    
+            } else {
+                alert("OP CODE ERROR: AE");
+            }
+        }
+
+        public opCodeA0(memoryLocation){
+            var memory = memoryLocation;
+            var value = parseInt(_Memory.addressSpace[memory],16);
+            this.Yreg = value;
+            this.PC += 2;    
+        }
+
+        public opCodeAC(memoryLocation){
+            var memory= memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16);
+            var value = parseInt(_Memory.addressSpace[addressPointer],16);
+             if(_Memory.addressSpace[memory+1] == "00"){
+                this.Yreg = value;    
+                this.PC += 3;    
+            } else {
+                alert("OP CODE ERROR: AC");
+            }
+        }
     }
 }
