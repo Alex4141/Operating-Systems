@@ -439,62 +439,79 @@ module TSOS {
                     var temp = new PCB();
                     //Make an array of the input split it by space
                     var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
-                    temp.memorySegementAmount = forMemory.length - 1;
+                    temp.memorySegementAmount = forMemory.length;
                     // Load Memory with the validated input.
                     _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
                     _StdOut.putText("New process created. PID: " + temp.pid);
                 } else {
                     _StdOut.putText("No free memory left!");
                 }
-            }
+            } 
         }
 
         public shellRun(args){
-            // Get the PID entered
             var processSelected = args[0];
-            var current;
+            var base;
             var limit;
 
-            // Make sure the pid is valid for a given input
             if(processSelected > _PCBContainer.length - 1){
-                _StdOut.putText("Invalid PID");
+                _StdOut.putText("Invalid PID");    
             } else {
-
-                // Set the virtual addresses that the particular process is limited to 
-                current = _PCBContainer[processSelected].baseRegister;
+                base = _PCBContainer[processSelected].baseRegister;
                 limit = _PCBContainer[processSelected].memorySegementAmount;
                 
-                while(current <= limit){
-                    switch(_Memory.addressSpace[current]){
+                while(base <= limit){
+                   switch(_Memory.addressSpace[base]){
                         case "A9":
-                            var forAccumulator = parseInt(_Memory.addressSpace[current + 1], 16);
-                            _CPU.setAccumulator(forAccumulator);
-                            _CPU.cycle();
-                            _Kernel.krnTrace('A9');
-                            current += 2;
+                            _CPU.opCodeA9(base+1);
+                            Shell.prototype.updateDisplay(base);
                             break;
                         case "AD":
-                            var addressPointer = parseInt(_Memory.addressSpace[current + 1],16);
-                            var forAccumulator = parseInt(_Memory.addressSpace[addressPointer],16);
-                            _CPU.setAccumulator(forAccumulator);
-                            _CPU.cycle();
-                            _Kernel.krnTrace('AD');
-                            current += 3;
+                            _CPU.opCodeAD(base+1);
+                            Shell.prototype.updateDisplay(base);
                             break;
                         case "8D":
-                            var forMemory = parseInt(_Memory.addressSpace[current + 1],16);
-                            _CPU.storeAccumulator(forMemory);
-                            _CPU.cycle();
-                            _Kernel.krnTrace('8D');
-                            current += 3;
+                            _CPU.opCode8D(base + 1);
+                            Shell.prototype.updateDisplay(base);
                             break;
                         default:
-                            break;
-                    }
+                            break;         
+                   }
+
+                   base++;
                 }
-            }
+            }     
         }
 
+        public updateDisplay(instruction){
+            // Documentation for TS lacks a way to access individual table cells
+            // So we're gonna have to update the display like this (sadnessssss)
+            
+            // Object for the table we're going to access
+            var table = (<HTMLTableElement> document.getElementById("cpuDisplay"));
+            var currInstruction = instruction;
 
+            // Delete the entire row of data values
+            table.deleteRow(1);
+
+            // Add a new row, where the last one was
+            var updatedRow = table.insertRow(1);
+
+            // Push new cells to fill up the row
+            var zValue = updatedRow.insertCell(0);
+            var yValue = updatedRow.insertCell(0);
+            var xValue = updatedRow.insertCell(0);
+            var accValue = updatedRow.insertCell(0);
+            var irValue = updatedRow.insertCell(0);
+            var pcValue = updatedRow.insertCell(0);
+
+            // Update the new cells with the appropriate values
+            zValue.appendChild(document.createTextNode(_CPU.Zflag.toString()));
+            yValue.appendChild(document.createTextNode(_CPU.Yreg.toString()));
+            xValue.appendChild(document.createTextNode(_CPU.Xreg.toString()));
+            accValue.appendChild(document.createTextNode(_CPU.Acc.toString()));
+            irValue.appendChild(document.createTextNode(currInstruction));
+            pcValue.appendChild(document.createTextNode(_CPU.PC.toString()));
+        }
     }
 }

@@ -43,11 +43,37 @@ var TSOS;
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately. 
         };
-        Cpu.prototype.setAccumulator = function (value) {
-            this.Acc = value;
-        };
         Cpu.prototype.storeAccumulator = function (location) {
             _Memory.addressSpace[location] = this.Acc.toString(16).toUpperCase();
+        };
+        Cpu.prototype.opCodeA9 = function (memoryLocation) {
+            var memory = memoryLocation;
+            var value = parseInt(_Memory.addressSpace[memory], 16);
+            this.Acc = value;
+            this.PC += 2;
+        };
+        Cpu.prototype.opCodeAD = function (memoryLocation) {
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+            if (_Memory.addressSpace[memory + 1] == "00") {
+                this.Acc = value;
+                this.PC += 3;
+            }
+            else {
+                alert("OP CODE ERROR: AD");
+            }
+        };
+        Cpu.prototype.opCode8D = function (memoryLocation) {
+            var memory = memoryLocation;
+            var location = parseInt(_Memory.addressSpace[memory], 16);
+            if (_Memory.addressSpace[memory + 1] == "00") {
+                _Memory.addressSpace[location] = this.Acc.toString(16);
+                this.PC += 3;
+            }
+            else {
+                alert("OP CODE ERROR: 8D");
+            }
         };
         return Cpu;
     }());

@@ -43,12 +43,38 @@ module TSOS {
             // Do the real work here. Be sure to set this.isExecuting appropriately. 
         }
 
-        public setAccumulator(value){
-            this.Acc = value;
-        }
-
         public storeAccumulator(location){
             _Memory.addressSpace[location] = this.Acc.toString(16).toUpperCase();
+        }
+
+        public opCodeA9(memoryLocation){
+            var memory = memoryLocation;
+            var value = parseInt(_Memory.addressSpace[memory],16);
+            this.Acc = value;
+            this.PC += 2;
+        }
+
+        public opCodeAD(memoryLocation){
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16);
+            var value = parseInt(_Memory.addressSpace[addressPointer],16);
+            if(_Memory.addressSpace[memory+1] == "00"){
+                this.Acc = value;    
+                this.PC += 3;    
+            } else {
+                alert("OP CODE ERROR: AD");
+            }
+        }
+
+        public opCode8D(memoryLocation){
+            var memory = memoryLocation;
+            var location = parseInt(_Memory.addressSpace[memory],16);
+            if(_Memory.addressSpace[memory+1] == "00"){
+                _Memory.addressSpace[location] = this.Acc.toString(16);
+                this.PC += 3;
+            } else {
+                alert("OP CODE ERROR: 8D");
+            }
         }
     }
 }

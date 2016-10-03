@@ -46,3 +46,10 @@ h3 {
   font-size: 8pt;
   text-align: center;
 }
+
+#cpuDisplay {
+  border: 1px solid black;
+  text-align: center;
+  font-weight: bold;
+  background-color: #efefef;
+}
