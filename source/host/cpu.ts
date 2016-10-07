@@ -41,12 +41,86 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately. 
+
+            var base = _PCBContainer[0].baseRegister;
+            var limit = _PCBContainer[0].memorySegementAmount;
+
+            while(base < limit){
+                switch(_Memory.addressSpace[base]){
+                    case "A9":
+                        this.opCodeA9(base+1);
+                        this.updateDisplay(base);
+                        base += 2;
+                        break;
+                    case "AD":
+                        this.opCodeAD(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                        break;
+                    case "8D":
+                        this.opCode8D(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                        break;
+                    case "6D":
+                        this.opCode6D(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                        break;
+                    case "A2":
+                        this.opCodeA2(base+1);
+                        this.updateDisplay(base);
+                        base += 2;
+                        break;
+                    case "AE":
+                        this.opCodeAE(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                        break;
+                    case "A0":
+                        this.opCodeA0(base+1);
+                        this.updateDisplay(base);
+                        base += 2;
+                        break;
+                    case "AC":
+                        this.opCodeAC(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                        break;
+                    case "EA":
+                        this.opCodeEA();
+                        this.updateDisplay(base);
+                        base++;
+                        break;
+                    case "00":
+                        base = limit;
+                        break;
+                    case "EC":
+                        this.opCodeEC(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                        break;
+                    case "EE":
+                        this.opCodeEE(base+1);
+                        this.updateDisplay(base);
+                        base += 3;
+                    case "FF":
+                        this.opCodeFF();
+                        this.updateDisplay(base);
+                        base++;
+                        break;
+                    default:
+                        //This is a placeholder
+                        //After all the op codes are working need to change this
+                        this.PC += 1;
+                        this.updateDisplay(base);
+                        base++;
+                        break;
+                }
+            }
         }
 
-        public storeAccumulator(location){
-            _Memory.addressSpace[location] = this.Acc.toString(16).toUpperCase();
-        }
-
+        
         public opCodeA9(memoryLocation){
             var memory = memoryLocation;
             var value = parseInt(_Memory.addressSpace[memory],16);
@@ -74,6 +148,18 @@ module TSOS {
                 this.PC += 3;
             } else {
                 alert("OP CODE ERROR: 8D");
+            }
+        }
+
+        public opCode6D(memoryLocation){
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16);
+            var value = parseInt(_Memory.addressSpace[addressPointer],16);
+            if(_Memory.addressSpace[memory+1] == "00"){
+                this.Acc += value;
+                this.PC += 3;
+            } else {
+                alert("OP CODE ERROR: 6D")
             }
         }
 
@@ -113,6 +199,75 @@ module TSOS {
             } else {
                 alert("OP CODE ERROR: AC");
             }
+        }
+
+        public opCodeEA(){
+            this.PC += 1;
+            return;
+        }
+
+        public opCodeEC(memoryLocation){
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16);
+            var value = parseInt(_Memory.addressSpace[addressPointer],16);
+            if(_Memory.addressSpace[memory+1] == "00"){
+                if(value == this.Xreg){
+                    this.Zflag = 1;
+                } else {
+                    this.Zflag = 0;
+                }
+                this.PC += 3;
+            } else {
+                alert("OP CODE ERROR: EC");                
+            }
+        }
+
+        public opCodeEE(memoryLocation){
+            var memory = memoryLocation;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16);
+            var value = parseInt(_Memory.addressSpace[addressPointer],16) + 1;
+            if(_Memory.addressSpace[memory+1] == "00"){
+                _Memory.addressSpace[addressPointer] = value.toString(16);
+                this.PC += 3;
+            } else {
+                alert("OP CODE ERROR: EE");
+            }
+        }
+
+        public opCodeFF(){
+            this.PC += 1;
+            return;
+        }
+
+        public updateDisplay(instruction){
+            // Documentation for TS lacks a way to access individual table cells
+            // So we're gonna have to update the display like this (sadnessssss)
+            
+            // Object for the table we're going to access
+            var table = (<HTMLTableElement> document.getElementById("cpuDisplay"));
+            var currInstruction = instruction;
+
+            // Delete the entire row of data values
+            table.deleteRow(1);
+
+            // Add a new row, where the last one was
+            var updatedRow = table.insertRow(1);
+
+            // Push new cells to fill up the row
+            var zValue = updatedRow.insertCell(0);
+            var yValue = updatedRow.insertCell(0);
+            var xValue = updatedRow.insertCell(0);
+            var accValue = updatedRow.insertCell(0);
+            var irValue = updatedRow.insertCell(0);
+            var pcValue = updatedRow.insertCell(0);
+
+            // Update the new cells with the appropriate values
+            zValue.appendChild(document.createTextNode(_CPU.Zflag.toString()));
+            yValue.appendChild(document.createTextNode(_CPU.Yreg.toString()));
+            xValue.appendChild(document.createTextNode(_CPU.Xreg.toString()));
+            accValue.appendChild(document.createTextNode(_CPU.Acc.toString()));
+            irValue.appendChild(document.createTextNode(currInstruction));
+            pcValue.appendChild(document.createTextNode(_CPU.PC.toString()));
         }
     }
 }

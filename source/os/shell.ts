@@ -457,77 +457,8 @@ module TSOS {
             if(processSelected > _PCBContainer.length - 1){
                 _StdOut.putText("Invalid PID");    
             } else {
-                base = _PCBContainer[processSelected].baseRegister;
-                limit = _PCBContainer[processSelected].memorySegementAmount;
-                
-                while(base <= limit){
-                   switch(_Memory.addressSpace[base]){
-                        case "A9":
-                            _CPU.opCodeA9(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        case "AD":
-                            _CPU.opCodeAD(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        case "8D":
-                            _CPU.opCode8D(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        case "A2":
-                            _CPU.opCodeA2(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        case "AE":
-                            _CPU.opCodeAE(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        case "A0":
-                            _CPU.opCodeA0(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        case "AC":
-                            _CPU.opCodeAC(base+1);
-                            Shell.prototype.updateDisplay(base);
-                            break;
-                        default:
-                            break;         
-                   }
-
-                   base++;
-                }
+                _CPU.cycle();
             }     
-        }
-
-        public updateDisplay(instruction){
-            // Documentation for TS lacks a way to access individual table cells
-            // So we're gonna have to update the display like this (sadnessssss)
-            
-            // Object for the table we're going to access
-            var table = (<HTMLTableElement> document.getElementById("cpuDisplay"));
-            var currInstruction = instruction;
-
-            // Delete the entire row of data values
-            table.deleteRow(1);
-
-            // Add a new row, where the last one was
-            var updatedRow = table.insertRow(1);
-
-            // Push new cells to fill up the row
-            var zValue = updatedRow.insertCell(0);
-            var yValue = updatedRow.insertCell(0);
-            var xValue = updatedRow.insertCell(0);
-            var accValue = updatedRow.insertCell(0);
-            var irValue = updatedRow.insertCell(0);
-            var pcValue = updatedRow.insertCell(0);
-
-            // Update the new cells with the appropriate values
-            zValue.appendChild(document.createTextNode(_CPU.Zflag.toString()));
-            yValue.appendChild(document.createTextNode(_CPU.Yreg.toString()));
-            xValue.appendChild(document.createTextNode(_CPU.Xreg.toString()));
-            accValue.appendChild(document.createTextNode(_CPU.Acc.toString()));
-            irValue.appendChild(document.createTextNode(currInstruction));
-            pcValue.appendChild(document.createTextNode(_CPU.PC.toString()));
         }
     }
 }
