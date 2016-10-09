@@ -50,63 +50,76 @@ module TSOS {
                     case "A9":
                         this.opCodeA9(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 2;
                         break;
                     case "AD":
                         this.opCodeAD(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
                     case "8D":
                         this.opCode8D(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
                     case "6D":
                         this.opCode6D(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
                     case "A2":
                         this.opCodeA2(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 2;
                         break;
                     case "AE":
                         this.opCodeAE(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
                     case "A0":
                         this.opCodeA0(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 2;
                         break;
                     case "AC":
                         this.opCodeAC(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
                     case "EA":
                         this.opCodeEA();
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base++;
                         break;
                     case "00":
+                        _MemoryManager.updateMemoryDisplay();
                         base = limit;
                         break;
                     case "EC":
                         this.opCodeEC(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
                     case "EE":
                         this.opCodeEE(base+1);
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base += 3;
                     case "FF":
                         this.opCodeFF();
                         this.updateDisplay(base);
+                        _MemoryManager.updateMemoryDisplay();
                         base++;
                         break;
                     default:
@@ -269,5 +282,6 @@ module TSOS {
             irValue.appendChild(document.createTextNode(currInstruction));
             pcValue.appendChild(document.createTextNode(_CPU.PC.toString()));
         }
+
     }
 }

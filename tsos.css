@@ -53,3 +53,17 @@ h3 {
   font-weight: bold;
   background-color: #efefef;
 }
+
+#memoryDiv{
+  width: 395px;
+  height: 160px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#memoryDisplay {
+  border: 1px solid black;
+  text-align: center;
+  font-weight: bold;
+  background-color: #efefef;  
+}

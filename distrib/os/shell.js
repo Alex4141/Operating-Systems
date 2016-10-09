@@ -369,6 +369,7 @@ var TSOS;
                     // Load Memory with the validated input.
                     _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
                     _StdOut.putText("New process created. PID: " + temp.pid);
+                    _MemoryManager.updateMemoryDisplay();
                 }
                 else {
                     _StdOut.putText("No free memory left!");
