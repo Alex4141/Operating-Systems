@@ -434,32 +434,42 @@ module TSOS {
            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
-                if(_PCBContainer.length == 0){
+                    
+                    // If memory's already been used in a load sequence reset it as well as the CPU registers
+                    _MemoryManager.resetMemory();
+                    _CPU.init();
+
+                    // Once again since we're only running one process pop the PCB off if we've ran a previous program
+                    if(_PCBContainer.length > 0){
+                        _PCBContainer.pop();
+                    }
+
                     // Create a new Process Control Block, because this process is valid
                     var temp = new PCB();
+
                     //Make an array of the input split it by space
                     var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
                     temp.memorySegementAmount = forMemory.length;
+
                     // Load Memory with the validated input.
                     _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
                     _StdOut.putText("New process created. PID: " + temp.pid);
                     _MemoryManager.updateMemoryDisplay();
-                } else {
-                    _StdOut.putText("No free memory left!");
                 }
-            } 
         }
 
         public shellRun(args){
             var processSelected = args[0];
             var base;
             var limit;
-
-            if(processSelected > _PCBContainer.length - 1){
-                _StdOut.putText("Invalid PID");    
-            } else {
+            
+            // Since we can only have 1 process right now
+            if(processSelected == 0 && _PCBContainer.length != 0) {
+               _StdOut.putText("Executing process 0");
                 _CPU.cycle();
-            }     
+            } else {
+                _StdOut.putText("Invalid PID");    
+            }    
         }
     }
 }

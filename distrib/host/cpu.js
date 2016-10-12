@@ -110,11 +110,16 @@ var TSOS;
                         _MemoryManager.updateMemoryDisplay();
                         base += 3;
                         break;
+                    case "D0":
+                        var baseAdd = this.opCodeD0(base + 1);
+                        this.Yreg = baseAdd;
+                        base += 2;
+                        break;
                     case "EE":
                         this.opCodeEE(base + 1);
                         this.updateDisplay(base);
                         _MemoryManager.updateMemoryDisplay();
-                        base += 3;
+                        base += 2;
                     case "FF":
                         this.opCodeFF();
                         this.updateDisplay(base);
@@ -124,12 +129,14 @@ var TSOS;
                     default:
                         //This is a placeholder
                         //After all the op codes are working need to change this
+                        document.getElementById("statusArea").value = "Bug";
                         this.PC += 1;
                         this.updateDisplay(base);
                         base++;
                         break;
                 }
             }
+            _PCBContainer.pop();
         };
         Cpu.prototype.opCodeA9 = function (memoryLocation) {
             var memory = memoryLocation;
@@ -153,7 +160,8 @@ var TSOS;
             var memory = memoryLocation;
             var location = parseInt(_Memory.addressSpace[memory], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
-                _Memory.addressSpace[location] = this.Acc.toString(16);
+                //_Memory.addressSpace[location] = this.Acc.toString(16);
+                _MemoryManager.storeAccumulator(location);
                 this.PC += 3;
             }
             else {
@@ -229,13 +237,31 @@ var TSOS;
                 alert("OP CODE ERROR: EC");
             }
         };
+        Cpu.prototype.opCodeD0 = function (memoryLocation) {
+            // This is the array index where branching starts
+            var memory = memoryLocation;
+            // This is the value that memory branches by
+            var branchBy = parseInt(_Memory.addressSpace[memory], 16);
+            if (this.Zflag == 0) {
+                var total = branchBy + memory;
+                while (total > 255) {
+                    total = total - 256;
+                }
+                this.PC += 2;
+                return total;
+            }
+            else {
+                this.PC += 2;
+                return memory + 1;
+            }
+        };
         Cpu.prototype.opCodeEE = function (memoryLocation) {
             var memory = memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16) + 1;
+            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
-                _Memory.addressSpace[addressPointer] = value.toString(16);
-                this.PC += 3;
+                _MemoryManager.addressIncrementor(addressPointer, value);
+                this.PC += 2;
             }
             else {
                 alert("OP CODE ERROR: EE");
@@ -250,7 +276,7 @@ var TSOS;
             // So we're gonna have to update the display like this (sadnessssss)
             // Object for the table we're going to access
             var table = document.getElementById("cpuDisplay");
-            var currInstruction = instruction;
+            var currInstruction = _Memory.addressSpace[instruction];
             // Delete the entire row of data values
             table.deleteRow(1);
             // Add a new row, where the last one was
