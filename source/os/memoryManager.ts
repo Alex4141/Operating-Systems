@@ -126,7 +126,7 @@ module TSOS {
 					_Memory.addressSpace[location] = "09";
 					break;
 				default:
-					_Memory.addressSpace[location] = _CPU.Acc.toString(16);
+					_Memory.addressSpace[location] = _CPU.Acc.toString(16).toUpperCase();
 					break;
 			}
 		}

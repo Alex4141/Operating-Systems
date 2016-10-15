@@ -379,13 +379,12 @@ var TSOS;
             }
         };
         Shell.prototype.shellRun = function (args) {
+            //(<HTMLInputElement> document.getElementById("statusArea")).value = _PCBContainer[0].memorySegementAmount.toString();
+            // Get the process that was ran
             var processSelected = args[0];
-            var base;
-            var limit;
-            // Since we can only have 1 process right now
+            // Since we can only have 1 process right now, this will do
             if (processSelected == 0 && _PCBContainer.length != 0) {
-                _StdOut.putText("Executing process 0");
-                _CPU.cycle();
+                _CPU.isExecuting = true;
             }
             else {
                 _StdOut.putText("Invalid PID");

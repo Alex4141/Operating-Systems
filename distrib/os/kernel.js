@@ -76,6 +76,7 @@ var TSOS;
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             }
             else if (_CPU.isExecuting) {
+                //if(_CPU.PC <= _PCBContainer[0].memorySegementAmount){
                 _CPU.cycle();
             }
             else {

@@ -41,104 +41,97 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately. 
+            const instructionLocation = 1;
 
-            var base = _PCBContainer[0].baseRegister;
-            var limit = _PCBContainer[0].memorySegementAmount;
-
-            while(base < limit){
-                switch(_Memory.addressSpace[base]){
-                    case "A9":
-                        this.opCodeA9(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 2;
-                        break;
-                    case "AD":
-                        this.opCodeAD(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 3;
-                        break;
-                    case "8D":
-                        this.opCode8D(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 3;
-                        break;
-                    case "6D":
-                        this.opCode6D(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 3;
-                        break;
-                    case "A2":
-                        this.opCodeA2(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 2;
-                        break;
-                    case "AE":
-                        this.opCodeAE(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 3;
-                        break;
-                    case "A0":
-                        this.opCodeA0(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 2;
-                        break;
-                    case "AC":
-                        this.opCodeAC(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 3;
-                        break;
-                    case "EA":
-                        this.opCodeEA();
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base++;
-                        break;
-                    case "00":
-                        _MemoryManager.updateMemoryDisplay();
-                        base = limit;
-                        break;
-                    case "EC":
-                        this.opCodeEC(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 3;
-                        break;
-                    case "D0":
-                        var baseAdd = this.opCodeD0(base+1);
-                        this.Yreg = baseAdd;
-                        base += 2;
-                        break;
-                    case "EE":
-                        this.opCodeEE(base+1);
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base += 2;
-                    case "FF":
-                        this.opCodeFF();
-                        this.updateDisplay(base);
-                        _MemoryManager.updateMemoryDisplay();
-                        base++;
-                        break;
-                    default:
-                        //This is a placeholder
-                        //After all the op codes are working need to change this
-                        (<HTMLInputElement> document.getElementById("statusArea")).value = "Bug";
-                        this.PC += 1;
-                        this.updateDisplay(base);
-                        base++;
-                        break;
-                }
+            switch(_Memory.addressSpace[this.PC]){
+                case "A9":
+                    this.opCodeA9(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 2;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "AD":
+                    this.opCodeAD(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "8D":
+                    this.opCode8D(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "6D":
+                    this.opCode6D(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "A2":
+                    this.opCodeA2(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 2;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "AE":
+                    this.opCodeAE(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "A0":
+                    this.opCodeA0(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 2;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "AC":
+                    this.opCodeAC(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "EA":
+                    this.opCodeEA();
+                    this.updateDisplay(this.PC);
+                    this.PC += 1;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "00":
+                    this.opCode00();
+                    this.updateDisplay(this.PC);
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "EC":
+                    this.opCodeEC(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "D0":
+                    var correctLocation = this.opCodeD0(this.PC + instructionLocation);
+                    (<HTMLInputElement> document.getElementById("statusArea")).value = correctLocation.toString();
+                    this.updateDisplay(this.PC);
+                    this.PC = correctLocation;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "EE":
+                    this.opCodeEE(this.PC + instructionLocation);
+                    this.updateDisplay(this.PC);
+                    this.PC += 3;
+                    _MemoryManager.updateMemoryDisplay();
+                    break;
+                case "FF":
+                    break;
+                default:
+                    alert("Invalid OP Code" + _Memory.addressSpace[this.PC]);
+                    this.isExecuting = false;
+                    this.updateDisplay(this.PC);
+                    _MemoryManager.updateMemoryDisplay();
+                    break;        
             }
-
-            _PCBContainer.pop();
+            //this.isExecuting = false;
         }
 
         
@@ -146,7 +139,6 @@ module TSOS {
             var memory = memoryLocation;
             var value = parseInt(_Memory.addressSpace[memory],16);
             this.Acc = value;
-            this.PC += 2;
         }
 
         public opCodeAD(memoryLocation){
@@ -154,8 +146,7 @@ module TSOS {
             var addressPointer = parseInt(_Memory.addressSpace[memory],16);
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
-                this.Acc = value;    
-                this.PC += 3;    
+                this.Acc = value;        
             } else {
                 alert("OP CODE ERROR: AD");
             }
@@ -166,8 +157,10 @@ module TSOS {
             var location = parseInt(_Memory.addressSpace[memory],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 //_Memory.addressSpace[location] = this.Acc.toString(16);
+                while(location > 255){
+                    location = location - 256;
+                }    
                 _MemoryManager.storeAccumulator(location);
-                this.PC += 3;
             } else {
                 alert("OP CODE ERROR: 8D");
             }
@@ -179,7 +172,6 @@ module TSOS {
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 this.Acc += value;
-                this.PC += 3;
             } else {
                 alert("OP CODE ERROR: 6D")
             }
@@ -188,8 +180,7 @@ module TSOS {
         public opCodeA2(memoryLocation){
             var memory = memoryLocation;
             var value = parseInt(_Memory.addressSpace[memory],16);
-            this.Xreg = value;
-            this.PC += 2;   
+            this.Xreg = value;  
         }
 
         public opCodeAE(memoryLocation){
@@ -198,7 +189,6 @@ module TSOS {
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
              if(_Memory.addressSpace[memory+1] == "00"){
                 this.Xreg = value;    
-                this.PC += 3;    
             } else {
                 alert("OP CODE ERROR: AE");
             }
@@ -208,7 +198,6 @@ module TSOS {
             var memory = memoryLocation;
             var value = parseInt(_Memory.addressSpace[memory],16);
             this.Yreg = value;
-            this.PC += 2;    
         }
 
         public opCodeAC(memoryLocation){
@@ -217,15 +206,17 @@ module TSOS {
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
              if(_Memory.addressSpace[memory+1] == "00"){
                 this.Yreg = value;    
-                this.PC += 3;    
             } else {
                 alert("OP CODE ERROR: AC");
             }
         }
 
         public opCodeEA(){
-            this.PC += 1;
             return;
+        }
+
+        public opCode00(){
+            this.isExecuting = false;
         }
 
         public opCodeEC(memoryLocation){
@@ -238,7 +229,6 @@ module TSOS {
                 } else {
                     this.Zflag = 0;
                 }
-                this.PC += 3;
             } else {
                 alert("OP CODE ERROR: EC");                
             }
@@ -250,15 +240,14 @@ module TSOS {
             // This is the value that memory branches by
             var branchBy = parseInt(_Memory.addressSpace[memory],16);
             if(this.Zflag == 0){
-                var total = branchBy + memory;
+                var total = branchBy + memory + 1;
                 while(total > 255){
                     total = total - 256;
                 }
-                this.PC += 2;
                 return total;
             } else {
-                this.PC += 2;
-                return memory + 1;
+                total = this.PC + 2;
+                return total;
             }
         }
 
@@ -268,7 +257,6 @@ module TSOS {
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 _MemoryManager.addressIncrementor(addressPointer, value);
-                this.PC += 2;
             } else {
                 alert("OP CODE ERROR: EE");
             }
