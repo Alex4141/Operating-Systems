@@ -384,6 +384,7 @@ var TSOS;
             var processSelected = args[0];
             // Since we can only have 1 process right now, this will do
             if (processSelected == 0 && _PCBContainer.length != 0) {
+                _StdOut.putText("Executing process " + processSelected);
                 _CPU.isExecuting = true;
             }
             else {

@@ -123,6 +123,20 @@ var TSOS;
                     _MemoryManager.updateMemoryDisplay();
                     break;
                 case "FF":
+                    var output = this.opCodeFF();
+                    if (this.Xreg == 1) {
+                        _StdOut.putText(output);
+                        _StdOut.advanceLine();
+                        _StdOut.putText(">");
+                    }
+                    else if (this.Xreg == 2) {
+                        _StdOut.putText(output);
+                        _StdOut.advanceLine();
+                        _StdOut.putText(">");
+                    }
+                    this.updateDisplay(this.PC);
+                    this.PC += 1;
+                    _MemoryManager.updateMemoryDisplay();
                     break;
                 default:
                     alert("Invalid OP Code" + _Memory.addressSpace[this.PC]);
@@ -257,8 +271,44 @@ var TSOS;
             }
         };
         Cpu.prototype.opCodeFF = function () {
-            this.PC += 1;
-            return;
+            var upperCaseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var upperCaseHexValue = 65;
+            var lowerCaseAlphabet = "abcdefghijklmnopqrstuvwxyz";
+            var lowerCaseHexValue = 97;
+            // If the X Register is 1 output the value of the Y register as a string
+            if (this.Xreg == 1) {
+                var output = this.Yreg.toString();
+                return output;
+            }
+            else if (this.Xreg == 2) {
+                var output = "";
+                var startingPoint = this.Yreg;
+                var doneParsing = false;
+                while (doneParsing == false) {
+                    var currentNum = parseInt(_Memory.addressSpace[startingPoint], 16);
+                    if (currentNum > 64 && currentNum < 90) {
+                        var index = currentNum - upperCaseHexValue;
+                        output += upperCaseAlphabet.charAt(index);
+                        startingPoint++;
+                    }
+                    else if (currentNum > 96 && currentNum < 122) {
+                        var index = currentNum - lowerCaseHexValue;
+                        output += lowerCaseAlphabet.charAt(index);
+                        startingPoint++;
+                    }
+                    else if (currentNum == 32) {
+                        output += " ";
+                        startingPoint++;
+                    }
+                    else {
+                        doneParsing = true;
+                    }
+                }
+                return output;
+            }
+            else {
+                return;
+            }
         };
         Cpu.prototype.updateDisplay = function (instruction) {
             // Documentation for TS lacks a way to access individual table cells
