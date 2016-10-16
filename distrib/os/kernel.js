@@ -77,6 +77,8 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 _CPU.cycle();
+                _GuiRoutines.updateCpuDisplay();
+                _GuiRoutines.updateMemoryDisplay();
             }
             else {
                 this.krnTrace("Idle");

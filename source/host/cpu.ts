@@ -46,81 +46,54 @@ module TSOS {
             switch(_Memory.addressSpace[this.PC]){
                 case "A9":
                     this.opCodeA9(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 2;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "AD":
                     this.opCodeAD(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "8D":
                     this.opCode8D(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "6D":
                     this.opCode6D(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "A2":
                     this.opCodeA2(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 2;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "AE":
                     this.opCodeAE(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "A0":
                     this.opCodeA0(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 2;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "AC":
                     this.opCodeAC(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "EA":
                     this.opCodeEA();
-                    this.updateDisplay(this.PC);
                     this.PC += 1;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "00":
                     this.opCode00();
-                    this.updateDisplay(this.PC);
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "EC":
                     this.opCodeEC(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "D0":
                     var correctLocation = this.opCodeD0(this.PC + instructionLocation);
-                    (<HTMLInputElement> document.getElementById("statusArea")).value = correctLocation.toString();
-                    this.updateDisplay(this.PC);
                     this.PC = correctLocation;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "EE":
                     this.opCodeEE(this.PC + instructionLocation);
-                    this.updateDisplay(this.PC);
                     this.PC += 3;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 case "FF":
                     var output = this.opCodeFF();
@@ -133,18 +106,13 @@ module TSOS {
                         _StdOut.advanceLine();
                         _StdOut.putText(">");                        
                     }
-                    this.updateDisplay(this.PC);
                     this.PC += 1;
-                    _MemoryManager.updateMemoryDisplay();
                     break;
                 default:
                     alert("Invalid OP Code" + _Memory.addressSpace[this.PC]);
                     this.isExecuting = false;
-                    this.updateDisplay(this.PC);
-                    _MemoryManager.updateMemoryDisplay();
                     break;        
             }
-            //this.isExecuting = false;
         }
 
         
@@ -162,6 +130,7 @@ module TSOS {
                 this.Acc = value;        
             } else {
                 alert("OP CODE ERROR: AD");
+                this.isExecuting = false;
             }
         }
 
@@ -176,6 +145,7 @@ module TSOS {
                 _MemoryManager.storeAccumulator(location);
             } else {
                 alert("OP CODE ERROR: 8D");
+                this.isExecuting = false;
             }
         }
 
@@ -186,7 +156,8 @@ module TSOS {
             if(_Memory.addressSpace[memory+1] == "00"){
                 this.Acc += value;
             } else {
-                alert("OP CODE ERROR: 6D")
+                alert("OP CODE ERROR: 6D");
+                this.isExecuting = false;
             }
         }
 
@@ -204,6 +175,7 @@ module TSOS {
                 this.Xreg = value;    
             } else {
                 alert("OP CODE ERROR: AE");
+                this.isExecuting = false;
             }
         }
 
@@ -221,6 +193,7 @@ module TSOS {
                 this.Yreg = value;    
             } else {
                 alert("OP CODE ERROR: AC");
+                this.isExecuting = false;
             }
         }
 
@@ -243,7 +216,8 @@ module TSOS {
                     this.Zflag = 0;
                 }
             } else {
-                alert("OP CODE ERROR: EC");                
+                alert("OP CODE ERROR: EC");
+                this.isExecuting = false;                
             }
         }
 
@@ -272,6 +246,7 @@ module TSOS {
                 _MemoryManager.addressIncrementor(addressPointer, value);
             } else {
                 alert("OP CODE ERROR: EE");
+                this.isExecuting = false;
             }
         }
 
@@ -314,37 +289,5 @@ module TSOS {
                 return;
             }
         }
-
-        public updateDisplay(instruction){
-            // Documentation for TS lacks a way to access individual table cells
-            // So we're gonna have to update the display like this (sadnessssss)
-            
-            // Object for the table we're going to access
-            var table = (<HTMLTableElement> document.getElementById("cpuDisplay"));
-            var currInstruction = _Memory.addressSpace[instruction];
-
-            // Delete the entire row of data values
-            table.deleteRow(1);
-
-            // Add a new row, where the last one was
-            var updatedRow = table.insertRow(1);
-
-            // Push new cells to fill up the row
-            var zValue = updatedRow.insertCell(0);
-            var yValue = updatedRow.insertCell(0);
-            var xValue = updatedRow.insertCell(0);
-            var accValue = updatedRow.insertCell(0);
-            var irValue = updatedRow.insertCell(0);
-            var pcValue = updatedRow.insertCell(0);
-
-            // Update the new cells with the appropriate values
-            zValue.appendChild(document.createTextNode(_CPU.Zflag.toString()));
-            yValue.appendChild(document.createTextNode(_CPU.Yreg.toString()));
-            xValue.appendChild(document.createTextNode(_CPU.Xreg.toString()));
-            accValue.appendChild(document.createTextNode(_CPU.Acc.toString()));
-            irValue.appendChild(document.createTextNode(currInstruction));
-            pcValue.appendChild(document.createTextNode(_CPU.PC.toString()));
-        }
-
     }
 }

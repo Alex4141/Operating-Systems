@@ -103,6 +103,7 @@ module TSOS {
 
             _Memory = new coreMemory();    //Initialize our core memory
             _MemoryManager = new memoryManager();    //Initialize memory manager
+            _GuiRoutines = new guiRoutines();    // Initializes GUI helpers
             
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.
