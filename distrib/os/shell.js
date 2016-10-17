@@ -369,6 +369,7 @@ var TSOS;
                 //Make an array of the input split it by space
                 var forMemory = document.getElementById("taProgramInput").value.split(" ");
                 temp.memorySegementAmount = forMemory.length;
+                _GuiRoutines.updatePCBDisplay();
                 // Load Memory with the validated input.
                 _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
                 _StdOut.putText("New process created. PID: " + temp.pid);
@@ -381,6 +382,7 @@ var TSOS;
             if (processSelected == _TotalProcesses - 1 && _PCBContainer.length != 0) {
                 _StdOut.putText("Executing process " + processSelected);
                 _CPU.isExecuting = true;
+                _PCBContainer[0].processState = "Running";
             }
             else {
                 _StdOut.putText("Invalid PID");

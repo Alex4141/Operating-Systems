@@ -67,3 +67,10 @@ h3 {
   font-weight: bold;
   background-color: #efefef;  
 }
+
+#PCBdisplay {
+ border: 1px solid black;
+ text-align: center;
+ font-weight: bold;
+ background-color: #efefef; 
+}

@@ -435,7 +435,6 @@ module TSOS {
            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
-                    
                     // If memory's already been used in a load sequence reset it as well as the CPU registers
                     _MemoryManager.resetMemory();
                     _CPU.init();
@@ -446,6 +445,7 @@ module TSOS {
                     //Make an array of the input split it by space
                     var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
                     temp.memorySegementAmount = forMemory.length;
+                    _GuiRoutines.updatePCBDisplay();
 
                     // Load Memory with the validated input.
                     _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
@@ -461,6 +461,7 @@ module TSOS {
             if(processSelected == _TotalProcesses - 1 && _PCBContainer.length != 0) {    
                     _StdOut.putText("Executing process " + processSelected);
                     _CPU.isExecuting = true;
+                    _PCBContainer[0].processState = "Running";
             } else {
                 _StdOut.putText("Invalid PID");    
             }    

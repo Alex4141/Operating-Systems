@@ -77,6 +77,7 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 _CPU.cycle();
+                _GuiRoutines.updatePCBDisplay();
                 _GuiRoutines.updateCpuDisplay();
                 _GuiRoutines.updateMemoryDisplay();
             }
