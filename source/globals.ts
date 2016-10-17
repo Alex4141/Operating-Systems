@@ -40,6 +40,7 @@ var _CommandHistory: string[] = [];										// All the commands
 var _CommandCycle: number = 0;											// Used to shift through command history
 
 var _PCBContainer = [];											// Holds all created PCB's
+var _TotalProcesses = 0;
 
 var _Canvas: HTMLCanvasElement;         // Initialized in Control.hostInit().
 var _CanvasDiv: HTMLDivElement;			// Initialized in Control.hostInit().

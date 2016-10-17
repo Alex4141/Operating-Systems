@@ -279,6 +279,7 @@ module TSOS {
         public shellShutdown(args) {
              _StdOut.putText("Shutting down...");
              // Call Kernel shutdown routine.
+             _CPU.isExecuting = false;
             _Kernel.krnShutdown();
             // TODO: Stop the final prompt from being displayed.  If possible.  Not a high priority.  (Damn OCD!)
         }
@@ -439,11 +440,6 @@ module TSOS {
                     _MemoryManager.resetMemory();
                     _CPU.init();
 
-                    // Once again since we're only running one process pop the PCB off if we've ran a previous program
-                    if(_PCBContainer.length > 0){
-                        _PCBContainer.pop();
-                    }
-
                     // Create a new Process Control Block, because this process is valid
                     var temp = new PCB();
 
@@ -459,13 +455,10 @@ module TSOS {
         }
 
         public shellRun(args){
-
-            //(<HTMLInputElement> document.getElementById("statusArea")).value = _PCBContainer[0].memorySegementAmount.toString();
             // Get the process that was ran
             var processSelected = args[0];
             
-            // Since we can only have 1 process right now, this will do
-            if(processSelected == 0 && _PCBContainer.length != 0) {    
+            if(processSelected == _TotalProcesses - 1 && _PCBContainer.length != 0) {    
                     _StdOut.putText("Executing process " + processSelected);
                     _CPU.isExecuting = true;
             } else {

@@ -82,6 +82,7 @@ module TSOS {
                     break;
                 case "00":
                     this.opCode00();
+                    _PCBContainer.pop();
                     break;
                 case "EC":
                     this.opCodeEC(this.PC + instructionLocation);
@@ -98,13 +99,22 @@ module TSOS {
                 case "FF":
                     var output = this.opCodeFF();
                     if(this.Xreg == 1){
+
+                        // Put the number and advance to the next line
                         _StdOut.putText(output);
                         _StdOut.advanceLine();
                         _StdOut.putText(">");
+
+                        // Accounting for the change of position while handling input
+                        _Console.buffer = "";
                     } else if(this.Xreg == 2){
+                        // Put the number and advance to the next line
                         _StdOut.putText(output);
                         _StdOut.advanceLine();
-                        _StdOut.putText(">");                        
+                        _StdOut.putText(">");
+
+                        // Accounting for the change of position while handling input
+                        _Console.buffer = "";                        
                     }
                     this.PC += 1;
                     break;

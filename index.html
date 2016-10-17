@@ -35,10 +35,30 @@
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment this line below to enable GLaDOS testing -->
-   <!-- <script type="text/javascript" src="test/glados-ip1.js"></script> -->
+   <script type="text/javascript" src="test/glados-ip2.js"></script>
 </head>
 
 <body onload="onDocumentLoad()">
+
+<div style="">
+    <label>
+      Date and Time
+      <br>
+      <textarea id="dateArea" rows="2" cols="48">    
+      </textarea>
+    </label>
+  </div>
+
+  <div style="">
+    <label>
+      Status
+      <br>
+      <textarea id="statusArea" rows="1" cols="48">    
+      </textarea>
+    </label>
+</div>
+   
+  </div>
 
 <div id="divMain" style="width:100%;">
 
@@ -89,28 +109,22 @@
          ></textarea>
       </label>
 
-  <div style="float:right;padding-right:250px;">
-    <label>
-      Date and Time
-      <br>
-      <textarea id="dateArea" rows="2" cols="48">    
-      </textarea>
-    </label>
-  </div>
-
-  <div style="float:right;">
-    <label>
-      Status
-      <br>
-      <textarea id="statusArea" rows="1" cols="48">    
-      </textarea>
-    </label>
-</div>
-   
-  </div>
-
   <br>
-  <div style="margin-left:520px;">
+  
+  <div id="divUserProgramInput" style="float:left;text-align: left;margin-right:1040px;">
+      <label>
+         User Program Input
+         <br>
+         <textarea name="taProgramInput"
+                   id  ="taProgramInput"
+                   rows="8"
+                   cols="48"
+         ></textarea>
+      </label>
+   </div>
+   <br>
+
+  <div style="">
       <label> CPU Stats</label>
       <table id="cpuDisplay" border="1" cellpadding="19">
         <tr>
@@ -133,9 +147,9 @@
   </div>
   <br>
 
-  <label style="margin-left:520px;"> Memory Stats</label>
-  <div id="memoryDiv" style="margin-left:520px;">
-    <table id="memoryDisplay" border="1" cellpadding="7" width="200">
+  <label style=""> Memory Stats</label>
+  <div id="memoryDiv" style="">
+    <table id="memoryDisplay" border="1" cellpadding="6" width="200">
     <tr>
     <td>0x0000</td>
     <td>00</td>
@@ -490,19 +504,6 @@
     </tr>
     </table>
   </div>
-
-   <br>
-   <div id="divUserProgramInput" style="margin-left:520px;">
-      <label>
-         User Program Input
-         <br>
-         <textarea name="taProgramInput"
-                   id  ="taProgramInput"
-                   rows="8"
-                   cols="48"
-         ></textarea>
-      </label>
-   </div>
 </div>
 <br>
 

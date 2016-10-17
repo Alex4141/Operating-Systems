@@ -13,6 +13,9 @@ var TSOS;
                 if (i <= (input.length - 1)) {
                     // Switch case for special cases, otherwise put op code in memory
                     switch (input[i]) {
+                        case "0":
+                            _Memory.addressSpace[i] = "00";
+                            break;
                         case "A":
                             _Memory.addressSpace[i] = "0A";
                             break;
@@ -73,6 +76,9 @@ var TSOS;
         memoryManager.prototype.storeAccumulator = function (memoryLocation) {
             var location = memoryLocation;
             switch (_CPU.Acc) {
+                case 0:
+                    _Memory.addressSpace[location] = "00";
+                    break;
                 case 10:
                     _Memory.addressSpace[location] = "0A";
                     break;

@@ -19,7 +19,8 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
-                    public buffer = "") {
+                    public buffer = "",
+                    public lineWrapLocations = []) {
         }
 
         public init(): void {
@@ -70,6 +71,10 @@ module TSOS {
                 } else if (chr == String.fromCharCode(40)){
                     this.shiftBack();
                 } else {
+                    if(this.currentXPosition > _Canvas.width){
+                       this.lineWrapLocations.push(this.currentXPosition); 
+                        this.advanceLine();
+                    }
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
@@ -101,6 +106,13 @@ module TSOS {
 
         public popText(): void {
             if(this.buffer != ""){
+                if(this.currentXPosition <= 5){
+                    this.currentYPosition -= _DefaultFontSize + 
+                                         _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                                         _FontHeightMargin;
+                    this.currentXPosition = this.lineWrapLocations[this.lineWrapLocations.length - 1];
+                    this.lineWrapLocations.pop();
+                }
                 var toRemove = this.buffer.slice(-1);
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, toRemove); 
                 _DrawingContext.clearRect(this.currentXPosition - offset, this.currentYPosition - 14, _Canvas.width, _Canvas.height);
@@ -110,6 +122,7 @@ module TSOS {
          }
 
         public shiftForward(): void {
+
             while(this.buffer != ""){
                 _StdOut.popText();
             }
@@ -130,6 +143,7 @@ module TSOS {
         } 
         
         public shiftBack(){
+            
             while(this.buffer != ""){
                 _StdOut.popText();
             }

@@ -12,17 +12,19 @@
 var TSOS;
 (function (TSOS) {
     var Console = (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, buffer, lineWrapLocations) {
             if (currentFont === void 0) { currentFont = _DefaultFontFamily; }
             if (currentFontSize === void 0) { currentFontSize = _DefaultFontSize; }
             if (currentXPosition === void 0) { currentXPosition = 0; }
             if (currentYPosition === void 0) { currentYPosition = _DefaultFontSize; }
             if (buffer === void 0) { buffer = ""; }
+            if (lineWrapLocations === void 0) { lineWrapLocations = []; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
+            this.lineWrapLocations = lineWrapLocations;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -74,6 +76,10 @@ var TSOS;
                     this.shiftBack();
                 }
                 else {
+                    if (this.currentXPosition > _Canvas.width) {
+                        this.lineWrapLocations.push(this.currentXPosition);
+                        this.advanceLine();
+                    }
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
                     this.putText(chr);
@@ -101,6 +107,13 @@ var TSOS;
         };
         Console.prototype.popText = function () {
             if (this.buffer != "") {
+                if (this.currentXPosition <= 5) {
+                    this.currentYPosition -= _DefaultFontSize +
+                        _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
+                        _FontHeightMargin;
+                    this.currentXPosition = this.lineWrapLocations[this.lineWrapLocations.length - 1];
+                    this.lineWrapLocations.pop();
+                }
                 var toRemove = this.buffer.slice(-1);
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, toRemove);
                 _DrawingContext.clearRect(this.currentXPosition - offset, this.currentYPosition - 14, _Canvas.width, _Canvas.height);
