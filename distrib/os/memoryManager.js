@@ -9,67 +9,101 @@ var TSOS;
         function memoryManager() {
         }
         memoryManager.prototype.loadMemory = function (base, limit, input) {
-            for (var i = base; i <= limit; i++) {
-                if (i <= (input.length - 1)) {
-                    // Switch case for special cases, otherwise put op code in memory
-                    switch (input[i]) {
-                        case "0":
-                            _Memory.addressSpace[i] = "00";
-                            break;
-                        case "A":
-                            _Memory.addressSpace[i] = "0A";
-                            break;
-                        case "B":
-                            _Memory.addressSpace[i] = "0B";
-                            break;
-                        case "C":
-                            _Memory.addressSpace[i] = "0C";
-                            break;
-                        case "D":
-                            _Memory.addressSpace[i] = "0D";
-                            break;
-                        case "E":
-                            _Memory.addressSpace[i] = "0E";
-                            break;
-                        case "F":
-                            _Memory.addressSpace[i] = "0F";
-                            break;
-                        case "1":
-                            _Memory.addressSpace[i] = "01";
-                            break;
-                        case "2":
-                            _Memory.addressSpace[i] = "02";
-                            break;
-                        case "3":
-                            _Memory.addressSpace[i] = "03";
-                            break;
-                        case "4":
-                            _Memory.addressSpace[i] = "04";
-                            break;
-                        case "5":
-                            _Memory.addressSpace[i] = "05";
-                            break;
-                        case "6":
-                            _Memory.addressSpace[i] = "06";
-                            break;
-                        case "7":
-                            _Memory.addressSpace[i] = "07";
-                            break;
-                        case "8":
-                            _Memory.addressSpace[i] = "08";
-                            break;
-                        case "9":
-                            _Memory.addressSpace[i] = "09";
-                            break;
-                        default:
-                            _Memory.addressSpace[i] = input[i];
-                            break;
-                    }
+            var memoryLocation = base;
+            var inputSegements = 0;
+            while (inputSegements < input.length) {
+                // Switch case for special cases, otherwise put op code in memory
+                switch (input[inputSegements]) {
+                    case "0":
+                        _Memory.addressSpace[memoryLocation] = "00";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "A":
+                        _Memory.addressSpace[memoryLocation] = "0A";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "B":
+                        _Memory.addressSpace[memoryLocation] = "0B";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "C":
+                        _Memory.addressSpace[memoryLocation] = "0C";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "D":
+                        _Memory.addressSpace[memoryLocation] = "0D";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "E":
+                        _Memory.addressSpace[memoryLocation] = "0E";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "F":
+                        _Memory.addressSpace[memoryLocation] = "0F";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "1":
+                        _Memory.addressSpace[memoryLocation] = "01";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "2":
+                        _Memory.addressSpace[memoryLocation] = "02";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "3":
+                        _Memory.addressSpace[memoryLocation] = "03";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "4":
+                        _Memory.addressSpace[memoryLocation] = "04";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "5":
+                        _Memory.addressSpace[memoryLocation] = "05";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "6":
+                        _Memory.addressSpace[memoryLocation] = "06";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "7":
+                        _Memory.addressSpace[memoryLocation] = "07";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "8":
+                        _Memory.addressSpace[memoryLocation] = "08";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    case "9":
+                        _Memory.addressSpace[memoryLocation] = "09";
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
+                    default:
+                        _Memory.addressSpace[memoryLocation] = input[inputSegements];
+                        memoryLocation++;
+                        inputSegements++;
+                        break;
                 }
             }
         };
         memoryManager.prototype.resetMemory = function () {
-            for (var i = 0; i <= 255; i++) {
+            for (var i = 0; i <= 767; i++) {
                 _Memory.addressSpace[i] = "00";
             }
         };

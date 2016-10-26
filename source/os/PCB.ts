@@ -10,7 +10,7 @@ module TSOS {
 		constructor(public processState: string = "New",
 					public pid: number = _TotalProcesses,
 					public programCounter: number = 0,
-					public baseRegister: number = _PCBContainer.length * 256,
+					public baseRegister: number = _TotalProcesses * 256,
 					public limitRegister: number = baseRegister + 255,
 					public memorySegementAmount: number = 0,
 					/*

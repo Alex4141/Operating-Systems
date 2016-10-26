@@ -6,7 +6,7 @@ module TSOS {
 	export class coreMemory {
 		constructor(public addressSpace: string[] = []){	
 			
-			for(var i = 0; i <= 255; i++){
+			for(var i = 0; i <= 767; i++){
 				this.addressSpace.push("00");
 			}
 

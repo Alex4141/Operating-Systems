@@ -362,7 +362,7 @@ var TSOS;
             }
             else {
                 // If memory's already been used in a load sequence reset it as well as the CPU registers
-                _MemoryManager.resetMemory();
+                // TODO MOVE THIS COMMAND TO CPU AFTER 00 NO LONGER VALID HERE -> _MemoryManager.resetMemory();
                 _CPU.init();
                 // Create a new Process Control Block, because this process is valid
                 var temp = new TSOS.PCB();
@@ -379,8 +379,10 @@ var TSOS;
         Shell.prototype.shellRun = function (args) {
             // Get the process that was ran
             var processSelected = args[0];
-            if (processSelected == _TotalProcesses - 1 && _PCBContainer.length != 0) {
+            //TODO MODIFY THIS CONDITIONAL BECAUSE It'll run several times
+            if (processSelected <= _TotalProcesses - 1 && _PCBContainer.length != 0) {
                 _StdOut.putText("Executing process " + processSelected);
+                _CPU.PC = processSelected * 256;
                 _CPU.isExecuting = true;
                 _PCBContainer[0].processState = "Running";
             }

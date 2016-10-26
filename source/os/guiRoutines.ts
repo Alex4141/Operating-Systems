@@ -11,11 +11,11 @@ module TSOS {
             var table = (<HTMLTableElement> document.getElementById("memoryDisplay"));
 
             // Delete every single row of data
-            for(var i = 0; i < 32; i++){
+            for(var i = 0; i < 96; i++){
                     table.deleteRow(0);
             }
 
-            for(var i = 0; i < 32; i++){
+            for(var i = 0; i < 96; i++){
 
             	// Add a new row into the table
                 var newRow = table.insertRow(i);

@@ -16,7 +16,7 @@ var TSOS;
             if (processState === void 0) { processState = "New"; }
             if (pid === void 0) { pid = _TotalProcesses; }
             if (programCounter === void 0) { programCounter = 0; }
-            if (baseRegister === void 0) { baseRegister = _PCBContainer.length * 256; }
+            if (baseRegister === void 0) { baseRegister = _TotalProcesses * 256; }
             if (limitRegister === void 0) { limitRegister = baseRegister + 255; }
             if (memorySegementAmount === void 0) { memorySegementAmount = 0; }
             if (PCstate === void 0) { PCstate = 0; }
