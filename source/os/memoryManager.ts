@@ -22,7 +22,6 @@ module TSOS {
 		}
 
 		public loadMemory(PCB, input): void {
-
 			var memoryLocation = PCB.baseRegister;
 			var inputSegements = 0;
 				while(inputSegements < input.length){

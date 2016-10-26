@@ -29,6 +29,8 @@ var _CPU: TSOS.Cpu;  						// Utilize TypeScript's type annotation system to ens
 var _Memory: TSOS.coreMemory;				// Ensures _Memory is an instance of the Memory class.
 var _MemoryManager: TSOS.memoryManager;		// Ensures _MemoryManager is an instance of MemoryManager class.
 var _GuiRoutines: TSOS.guiRoutines;			// Ensures _GuiRoutines is an instance of Gui Routines class.
+var _ReadyQueue: TSOS.Queue;				// Ensures _ReadyQueue is an instance of Queue
+var _TerminatedQueue: TSOS.Queue;			// Ensures _TerminatedQueue is an instance of Queue	
 
 var _OSclock: number = 0;  // Page 23.
 

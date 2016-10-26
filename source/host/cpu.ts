@@ -82,7 +82,7 @@ module TSOS {
                     break;
                 case "00":
                     this.opCode00();
-                    _PCBContainer.pop();
+                    //_PCBContainer.pop(); TODO: Look into why this needs to be replaced.
                     break;
                 case "EC":
                     this.opCodeEC(this.PC + instructionLocation);

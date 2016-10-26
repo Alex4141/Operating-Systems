@@ -3,6 +3,7 @@
 ///<reference path="shellCommand.ts" />
 ///<reference path="userCommand.ts" />
 ///<reference path="PCB.ts" />
+///<reference path="queue.ts" />
 /* ------------
    Shell.ts
 
@@ -386,12 +387,17 @@ var TSOS;
         Shell.prototype.shellRun = function (args) {
             // Get the process that was ran
             var processSelected = args[0];
-            //TODO MODIFY THIS CONDITIONAL BECAUSE It'll run several times
-            if (processSelected <= _TotalProcesses - 1 && _PCBContainer.length != 0) {
-                _StdOut.putText("Executing process " + processSelected);
-                _CPU.PC = processSelected * 256;
+            var selectedProcess;
+            for (var i = 0; i < _ReadyQueue.getSize(); i++) {
+                if (_ReadyQueue.q[i].pid == processSelected) {
+                    processSelected = _ReadyQueue.q[i];
+                }
+            }
+            if (TSOS.PCB != null) {
+                _StdOut.putText("Executing process " + processSelected.pid);
+                _CPU.PC = processSelected.baseRegister;
                 _CPU.isExecuting = true;
-                _PCBContainer[0].processState = "Running";
+                processSelected.processState = "Running";
             }
             else {
                 _StdOut.putText("Invalid PID");

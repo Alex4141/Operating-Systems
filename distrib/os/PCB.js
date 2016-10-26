@@ -35,8 +35,9 @@ var TSOS;
             this.XregState = XregState;
             this.YregState = YregState;
             this.ZflagState = ZflagState;
-            this.paritionCheck();
-            _PCBContainer.push(this); // Push the object into the array
+            this.paritionCheck(); // Assign the PCB the right base and limit registers
+            _ReadyQueue.enqueue(this); // Push the PCB into the Ready Queue
+            _PCBContainer.push(this); // TODO implement the ready queue so I can get rid of this Push the object into the array
             _TotalProcesses++; // Increment the total number of processes	
         }
         PCB.prototype.paritionCheck = function () {
