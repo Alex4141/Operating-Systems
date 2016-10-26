@@ -86,6 +86,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<int> - Runs the program loaded into memory");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
+            // clearmem
+            sc = new TSOS.ShellCommand(this.shellClearMemory, "clearmem", "- Clears all partitions of memory");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -389,6 +393,11 @@ var TSOS;
             else {
                 _StdOut.putText("Invalid PID");
             }
+        };
+        Shell.prototype.shellClearMemory = function () {
+            _MemoryManager.resetMemory();
+            _StdOut.putText("Reseting memory...");
+            _GuiRoutines.updateMemoryDisplay();
         };
         return Shell;
     }());

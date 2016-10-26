@@ -137,6 +137,13 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+            // clearmem
+            sc = new ShellCommand(this.shellClearMemory,
+                                    "clearmem",
+                                    "- Clears all partitions of memory");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -467,6 +474,12 @@ module TSOS {
             } else {
                 _StdOut.putText("Invalid PID");    
             }    
+        }
+
+        public shellClearMemory(){
+            _MemoryManager.resetMemory();
+            _StdOut.putText("Reseting memory...");
+            _GuiRoutines.updateMemoryDisplay();
         }
     }
 }
