@@ -82,7 +82,8 @@ module TSOS {
                     break;
                 case "00":
                     this.opCode00();
-                    //_PCBContainer.pop(); TODO: Look into why this needs to be replaced.
+                    _MemoryManager.resetPartition(_CurrentPCB.baseRegister);
+                    //Next up is figure out how to remove from the queue this may mean sorting it
                     break;
                 case "EC":
                     this.opCodeEC(this.PC + instructionLocation);

@@ -106,6 +106,21 @@ module TSOS {
 			}
 		}
 
+		public resetPartition(base){
+			var limit = base + 255;
+			for(var i = base; i <= limit; i++){
+				_Memory.addressSpace[i] = "00";
+			}
+
+			if(base == 0){
+				this.partitionOneEmpty = true;
+			} else if(base == 256){
+				this.partitionTwoEmpty = true;
+			}  else {
+				this.partitionThreeEmpty = true;
+			}
+		}
+
 		public storeAccumulator(memoryLocation){
 			var location = memoryLocation;
 

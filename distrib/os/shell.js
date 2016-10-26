@@ -387,19 +387,23 @@ var TSOS;
         Shell.prototype.shellRun = function (args) {
             // Get the process that was ran
             var processSelected = args[0];
-            var selectedProcess;
+            var selectedPCB;
+            // Make sure the PCB with the pid is in the Ready Queue
             for (var i = 0; i < _ReadyQueue.getSize(); i++) {
                 if (_ReadyQueue.q[i].pid == processSelected) {
-                    processSelected = _ReadyQueue.q[i];
+                    selectedPCB = _ReadyQueue.q[i];
                 }
             }
-            if (TSOS.PCB != null) {
-                _StdOut.putText("Executing process " + processSelected.pid);
-                _CPU.PC = processSelected.baseRegister;
+            // And if so start execution after pointing the PC to the base register
+            if (selectedPCB != null) {
+                _StdOut.putText("Executing process " + selectedPCB.pid);
+                _CPU.PC = selectedPCB.baseRegister;
+                _CurrentPCB = selectedPCB;
                 _CPU.isExecuting = true;
-                processSelected.processState = "Running";
+                selectedPCB.processState = "Running";
             }
             else {
+                // Otherwise it's an invalid Process ID
                 _StdOut.putText("Invalid PID");
             }
         };

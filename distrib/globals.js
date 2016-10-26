@@ -33,7 +33,8 @@ var _AllCommands = []; // Global accessor for all of the string values of our co
 var _CommandHistory = []; // All the commands
 var _CommandCycle = 0; // Used to shift through command history
 var _PCBContainer = []; // Holds all created PCB's
-var _TotalProcesses = 0;
+var _TotalProcesses = 0; // Total Processes that have been created
+var _CurrentPCB; // Ensures that CurrentPCB is an instance of PCB
 var _Canvas; // Initialized in Control.hostInit().
 var _CanvasDiv; // Initialized in Control.hostInit().
 var _DrawingContext; // = _Canvas.getContext("2d");  // Assigned here for type safety, but re-initialized in Control.hostInit() for OCD and logic.
