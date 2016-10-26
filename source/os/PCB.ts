@@ -10,8 +10,8 @@ module TSOS {
 		constructor(public processState: string = "New",
 					public pid: number = _TotalProcesses,
 					public programCounter: number = 0,
-					public baseRegister: number = _TotalProcesses * 256,
-					public limitRegister: number = baseRegister + 255,
+					public baseRegister: number = 0,
+					public limitRegister: number = 0,
 					public memorySegementAmount: number = 0,
 					/*
 					These vars below will be important later on when switching between processes
@@ -23,9 +23,32 @@ module TSOS {
 					public XregState: number = 0,
 					public YregState: number = 0,
 					public ZflagState: number = 0){	
+					this.paritionCheck();
 					_PCBContainer.push(this);			// Push the object into the array
 					_TotalProcesses++;					// Increment the total number of processes	
 		
 		}
+
+		public paritionCheck(){
+			/* Check to see which partitions are empty
+			Copy the appropriate base and limit to the current PCB
+			Set the partition to full too.
+			*/
+			if(_MemoryManager.partitionOneEmpty == true){
+				this.setBaseAndLimit(0, 255);
+				_MemoryManager.partitionOneEmpty = false;
+			} else if(_MemoryManager.partitionTwoEmpty == true){
+				this.setBaseAndLimit(256, 511);
+				_MemoryManager.partitionTwoEmpty = false;
+			} else if(_MemoryManager.partitionThreeEmpty == true){
+				this.setBaseAndLimit(512, 767);
+				_MemoryManager.partitionThreeEmpty = false;
+			}
+		}
+
+		public setBaseAndLimit(baseVal, limitVal): void{
+			this.baseRegister = baseVal;
+			this.limitRegister = limitVal;
+		} 
 	}
 }

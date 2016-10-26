@@ -8,11 +8,22 @@ i.e. the exclusive access to memory
 module TSOS {
 	export class memoryManager {
 		
-		constructor(){
+		constructor(public partitionOneEmpty = true,
+					public partitionTwoEmpty = true,
+					public partitionThreeEmpty = true){
 		}
 
-		public loadMemory(base, limit, input): void {
-			var memoryLocation = base;
+		public memoryFull(): boolean {
+			if(this.partitionOneEmpty == false && this.partitionTwoEmpty == false && this.partitionThreeEmpty == false){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public loadMemory(PCB, input): void {
+
+			var memoryLocation = PCB.baseRegister;
 			var inputSegements = 0;
 				while(inputSegements < input.length){
 					// Switch case for special cases, otherwise put op code in memory

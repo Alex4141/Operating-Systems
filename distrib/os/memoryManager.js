@@ -6,10 +6,24 @@ i.e. the exclusive access to memory
 var TSOS;
 (function (TSOS) {
     var memoryManager = (function () {
-        function memoryManager() {
+        function memoryManager(partitionOneEmpty, partitionTwoEmpty, partitionThreeEmpty) {
+            if (partitionOneEmpty === void 0) { partitionOneEmpty = true; }
+            if (partitionTwoEmpty === void 0) { partitionTwoEmpty = true; }
+            if (partitionThreeEmpty === void 0) { partitionThreeEmpty = true; }
+            this.partitionOneEmpty = partitionOneEmpty;
+            this.partitionTwoEmpty = partitionTwoEmpty;
+            this.partitionThreeEmpty = partitionThreeEmpty;
         }
-        memoryManager.prototype.loadMemory = function (base, limit, input) {
-            var memoryLocation = base;
+        memoryManager.prototype.memoryFull = function () {
+            if (this.partitionOneEmpty == false && this.partitionTwoEmpty == false && this.partitionThreeEmpty == false) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        memoryManager.prototype.loadMemory = function (PCB, input) {
+            var memoryLocation = PCB.baseRegister;
             var inputSegements = 0;
             while (inputSegements < input.length) {
                 // Switch case for special cases, otherwise put op code in memory

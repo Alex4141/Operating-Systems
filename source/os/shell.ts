@@ -442,23 +442,25 @@ module TSOS {
            if(inputMatch.value.match('[^A-F0-9\\s]') || inputMatch.value.length == 0) {
                 _StdOut.putText("Invalid Input");
             } else {
-                    // If memory's already been used in a load sequence reset it as well as the CPU registers
-                    // TODO MOVE THIS COMMAND TO CPU AFTER 00 NO LONGER VALID HERE -> _MemoryManager.resetMemory();
-                    _CPU.init();
+                    // Check to see if all memory partitions are full
+                    if(_MemoryManager.memoryFull() == true){
+                        _StdOut.putText("All memory partitions allocated");
+                    } else {
 
-                    // Create a new Process Control Block, because this process is valid
-                    var temp = new PCB();
+                        // Create a new Process Control Block, because this process is valid
+                        var newProcess = new PCB();
 
-                    //Make an array of the input split it by space
-                    var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
-                    temp.memorySegementAmount = forMemory.length;
-                    _GuiRoutines.updatePCBDisplay();
+                        //Make an array of the input split it by space
+                        var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                        newProcess.memorySegementAmount = forMemory.length;
+                        _GuiRoutines.updatePCBDisplay();
 
-                    // Load Memory with the validated input.
-                    _MemoryManager.loadMemory(temp.baseRegister, temp.limitRegister, forMemory);
-                    _StdOut.putText("New process created. PID: " + temp.pid);
-                    _GuiRoutines.updateMemoryDisplay();
-                }
+                        // Load Memory with the validated input.
+                        _MemoryManager.loadMemory(newProcess, forMemory);
+                        _StdOut.putText("New process created. PID: " + newProcess.pid);
+                        _GuiRoutines.updateMemoryDisplay();
+                    }
+            }
         }
 
         public shellRun(args){

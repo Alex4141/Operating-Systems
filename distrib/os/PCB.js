@@ -16,8 +16,8 @@ var TSOS;
             if (processState === void 0) { processState = "New"; }
             if (pid === void 0) { pid = _TotalProcesses; }
             if (programCounter === void 0) { programCounter = 0; }
-            if (baseRegister === void 0) { baseRegister = _TotalProcesses * 256; }
-            if (limitRegister === void 0) { limitRegister = baseRegister + 255; }
+            if (baseRegister === void 0) { baseRegister = 0; }
+            if (limitRegister === void 0) { limitRegister = 0; }
             if (memorySegementAmount === void 0) { memorySegementAmount = 0; }
             if (PCstate === void 0) { PCstate = 0; }
             if (AccState === void 0) { AccState = 0; }
@@ -35,9 +35,32 @@ var TSOS;
             this.XregState = XregState;
             this.YregState = YregState;
             this.ZflagState = ZflagState;
+            this.paritionCheck();
             _PCBContainer.push(this); // Push the object into the array
             _TotalProcesses++; // Increment the total number of processes	
         }
+        PCB.prototype.paritionCheck = function () {
+            /* Check to see which partitions are empty
+            Copy the appropriate base and limit to the current PCB
+            Set the partition to full too.
+            */
+            if (_MemoryManager.partitionOneEmpty == true) {
+                this.setBaseAndLimit(0, 255);
+                _MemoryManager.partitionOneEmpty = false;
+            }
+            else if (_MemoryManager.partitionTwoEmpty == true) {
+                this.setBaseAndLimit(256, 511);
+                _MemoryManager.partitionTwoEmpty = false;
+            }
+            else if (_MemoryManager.partitionThreeEmpty == true) {
+                this.setBaseAndLimit(512, 767);
+                _MemoryManager.partitionThreeEmpty = false;
+            }
+        };
+        PCB.prototype.setBaseAndLimit = function (baseVal, limitVal) {
+            this.baseRegister = baseVal;
+            this.limitRegister = limitVal;
+        };
         return PCB;
     }());
     TSOS.PCB = PCB;
