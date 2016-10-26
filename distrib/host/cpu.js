@@ -82,8 +82,11 @@ var TSOS;
                     break;
                 case "00":
                     this.opCode00();
+                    /* Since the process is now over, reset the partition it was in
+                    Dequeue the process from the Ready Queue
+                    */
                     _MemoryManager.resetPartition(_CurrentPCB.baseRegister);
-                    //Next up is figure out how to remove from the queue this may mean sorting it
+                    _ReadyQueue.dequeue();
                     break;
                 case "EC":
                     this.opCodeEC(this.PC + instructionLocation);
@@ -145,7 +148,7 @@ var TSOS;
             var location = parseInt(_Memory.addressSpace[memory], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 //_Memory.addressSpace[location] = this.Acc.toString(16);
-                while (location > 255) {
+                while (location > _CurrentPCB.limitRegister) {
                     location = location - 256;
                 }
                 _MemoryManager.storeAccumulator(location);
@@ -231,7 +234,7 @@ var TSOS;
             var branchBy = parseInt(_Memory.addressSpace[memory], 16);
             if (this.Zflag == 0) {
                 var total = branchBy + memory + 1;
-                while (total > 255) {
+                while (total > _CurrentPCB.limitRegister) {
                     total = total - 256;
                 }
                 return total;

@@ -91,7 +91,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellClearMemory, "clearmem", "- Clears all partitions of memory");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
-            // ps  - list the running processes and their IDs
+            // ps
+            sc = new TSOS.ShellCommand(this.shellProcessDisplay, "ps", "- Shows all active processes");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             // kill <id> - kills the specified process id.
             //
             // Display the initial prompt.
@@ -391,7 +394,12 @@ var TSOS;
             // Make sure the PCB with the pid is in the Ready Queue
             for (var i = 0; i < _ReadyQueue.getSize(); i++) {
                 if (_ReadyQueue.q[i].pid == processSelected) {
+                    // Get the specific PCB so we can use it's attributes
                     selectedPCB = _ReadyQueue.q[i];
+                    // Remove the selectedPCB from it's location in the Ready Queue
+                    _ReadyQueue.q.splice(i, 1);
+                    // Readd the selectedPCB to the front of the Queue
+                    _ReadyQueue.q.splice(0, 0, selectedPCB);
                 }
             }
             // And if so start execution after pointing the PC to the base register
@@ -411,6 +419,17 @@ var TSOS;
             _MemoryManager.resetMemory();
             _StdOut.putText("Reseting memory...");
             _GuiRoutines.updateMemoryDisplay();
+        };
+        Shell.prototype.shellProcessDisplay = function () {
+            if (_ReadyQueue.getSize() == 0) {
+                _StdOut.putText("No active processes");
+            }
+            else {
+                _StdOut.putText("Active Processes: ");
+                for (var i = 0; i < _ReadyQueue.getSize(); i++) {
+                    _StdOut.putText("PID: " + _ReadyQueue.q[i].pid.toString() + " ");
+                }
+            }
         };
         return Shell;
     }());
