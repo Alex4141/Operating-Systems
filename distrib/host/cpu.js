@@ -133,7 +133,7 @@ var TSOS;
         };
         Cpu.prototype.opCodeAD = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 this.Acc = value;
@@ -145,7 +145,8 @@ var TSOS;
         };
         Cpu.prototype.opCode8D = function (memoryLocation) {
             var memory = memoryLocation;
-            var location = parseInt(_Memory.addressSpace[memory], 16);
+            var location = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
+            document.getElementById("statusArea").value = location.toString();
             if (_Memory.addressSpace[memory + 1] == "00") {
                 //_Memory.addressSpace[location] = this.Acc.toString(16);
                 while (location > _CurrentPCB.limitRegister) {
@@ -160,7 +161,7 @@ var TSOS;
         };
         Cpu.prototype.opCode6D = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 this.Acc += value;
@@ -177,7 +178,7 @@ var TSOS;
         };
         Cpu.prototype.opCodeAE = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 this.Xreg = value;
@@ -194,7 +195,7 @@ var TSOS;
         };
         Cpu.prototype.opCodeAC = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 this.Yreg = value;
@@ -212,7 +213,7 @@ var TSOS;
         };
         Cpu.prototype.opCodeEC = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 if (value == this.Xreg) {
@@ -246,7 +247,7 @@ var TSOS;
         };
         Cpu.prototype.opCodeEE = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _CurrentPCB.baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer], 16);
             if (_Memory.addressSpace[memory + 1] == "00") {
                 _MemoryManager.addressIncrementor(addressPointer, value);
@@ -271,7 +272,7 @@ var TSOS;
                 var startingPoint = this.Yreg;
                 var doneParsing = false;
                 while (doneParsing == false) {
-                    var currentNum = parseInt(_Memory.addressSpace[startingPoint], 16);
+                    var currentNum = parseInt(_Memory.addressSpace[startingPoint + _CurrentPCB.baseRegister], 16);
                     if (currentNum > 64 && currentNum < 90) {
                         var index = currentNum - upperCaseHexValue;
                         output += upperCaseAlphabet.charAt(index);
