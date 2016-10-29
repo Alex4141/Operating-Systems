@@ -24,6 +24,7 @@ var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is 
 var _Memory; // Ensures _Memory is an instance of the Memory class.
 var _MemoryManager; // Ensures _MemoryManager is an instance of MemoryManager class.
 var _GuiRoutines; // Ensures _GuiRoutines is an instance of Gui Routines class.
+var _CPUScheduler; // Ensures _CPUScheduler is an instance of Scheduler
 var _ReadyQueue; // Ensures _ReadyQueue is an instance of Queue
 var _TerminatedQueue; // Ensures _TerminatedQueue is an instance of Queue	
 var _OSclock = 0; // Page 23.

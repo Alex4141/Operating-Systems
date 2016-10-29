@@ -95,6 +95,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellProcessDisplay, "ps", "- Shows all active processes");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
+            // quantum
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "- Reset the quantum for Round Robin Scheduling");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             // kill <id> - kills the specified process id.
             //
             // Display the initial prompt.
@@ -430,6 +434,11 @@ var TSOS;
                     _StdOut.putText("PID: " + _ReadyQueue.q[i].pid.toString() + " ");
                 }
             }
+        };
+        Shell.prototype.shellQuantum = function (args) {
+            var newQuantum = args[0];
+            _CPUScheduler.setQuantum(newQuantum);
+            _StdOut.putText("Quantum set to " + newQuantum);
         };
         return Shell;
     }());

@@ -106,6 +106,7 @@ module TSOS {
             _GuiRoutines = new guiRoutines();    // Initializes GUI helpers
             _ReadyQueue = new Queue();            // Initializes the Ready Queue
             _TerminatedQueue = new Queue();        // Initializes the Terminated Queue
+            _CPUScheduler = new scheduler();       // Initializes the CPU scheduler
             
             // ... Create and initialize the CPU (because it's part of the hardware)  ...
             _CPU = new Cpu();  // Note: We could simulate multi-core systems by instantiating more than one instance of the CPU here.

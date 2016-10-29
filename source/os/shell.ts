@@ -153,6 +153,14 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+
+            // quantum
+            sc = new ShellCommand(this.shellQuantum,
+                                    "quantum",
+                                    "- Reset the quantum for Round Robin Scheduling");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             // kill <id> - kills the specified process id.
 
             //
@@ -517,6 +525,12 @@ module TSOS {
                     _StdOut.putText("PID: " + _ReadyQueue.q[i].pid.toString() + " ");
                 }
             }
+        }
+
+        public shellQuantum(args){
+            var newQuantum = args[0];
+            _CPUScheduler.setQuantum(newQuantum);
+            _StdOut.putText("Quantum set to " + newQuantum);
         }
     }
 }
