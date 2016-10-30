@@ -23,9 +23,11 @@ module TSOS {
 					public XregState: number = 0,
 					public YregState: number = 0,
 					public ZflagState: number = 0,
-					public quantum: number = _CPUScheduler.quantum){	
+					public quantum: number = _CPUScheduler.quantum,
+					public processComplete: boolean = false){	
 					this.paritionCheck();				// Assign the PCB the right base and limit registers
 					_ReadyQueue.enqueue(this);			// Push the PCB into the Ready Queue
+					this.PCstate = this.baseRegister;	// Change the PC to the proper location
 					_PCBContainer.push(this);			// TODO implement the ready queue so I can get rid of this Push the object into the array
 					_TotalProcesses++;					// Increment the total number of processes	
 		

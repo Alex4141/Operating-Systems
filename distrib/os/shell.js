@@ -441,12 +441,20 @@ var TSOS;
         };
         Shell.prototype.shellQuantum = function (args) {
             var newQuantum = args[0];
-            _CPUScheduler.setQuantum(newQuantum);
-            _StdOut.putText("Quantum set to " + newQuantum);
+            if (newQuantum < 1) {
+                _StdOut.putText("Invalid quantum");
+            }
+            else {
+                _CPUScheduler.setQuantum(newQuantum);
+                _StdOut.putText("Quantum set to " + newQuantum);
+            }
         };
         Shell.prototype.shellRunAll = function () {
             // The first process in the ready queue is assigned first for execution 
-            _CurrentPCB = _ReadyQueue[0];
+            var startingProcess = _ReadyQueue.q[0];
+            _CurrentPCB = startingProcess;
+            _CPUScheduler.multipleProcessesRunning = true;
+            _CPU.PC = startingProcess.baseRegister;
             _CPU.isExecuting = true;
             _CurrentPCB.processState = "Running";
         };

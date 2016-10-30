@@ -546,8 +546,10 @@ module TSOS {
 
         public shellRunAll(){
             // The first process in the ready queue is assigned first for execution 
-            _CurrentPCB = _ReadyQueue[0];
+            var startingProcess = _ReadyQueue.q[0];
+            _CurrentPCB = startingProcess;
             _CPUScheduler.multipleProcessesRunning = true;
+            _CPU.PC = startingProcess.baseRegister;
             _CPU.isExecuting = true;
             _CurrentPCB.processState = "Running";
         }

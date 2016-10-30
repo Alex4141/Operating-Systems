@@ -45,7 +45,8 @@ module TSOS {
             quantum's usage by one.
             */
             if(_CPUScheduler.multipleProcessesRunning == true){
-                _CurrentPCB.quantum = _CurrentPCB.quantum - 1;
+                _ReadyQueue.q[0].quantum -= 1;
+                (<HTMLInputElement> document.getElementById("statusArea")).value = _ReadyQueue.q[0].quantum.toString();
             }
 
             const instructionLocation = 1;
@@ -88,12 +89,17 @@ module TSOS {
                     this.PC += 1;
                     break;
                 case "00":
-                    this.opCode00();
-                    /* Since the process is now over, reset the partition it was in
-                    Dequeue the process from the Ready Queue
-                    */
-                    _MemoryManager.resetPartition(_CurrentPCB.baseRegister);
-                    _ReadyQueue.dequeue();
+                    // Complete execution of a process among several processes
+                    if(_CPUScheduler.multipleProcessesRunning == true){
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    } else {
+                        // Complete execution for a singular process
+                        this.opCode00();
+                        _MemoryManager.resetPartition(_CurrentPCB.baseRegister);
+                        _ReadyQueue.dequeue();
+                        _CurrentPCB = null;
+                    }
                     break;
                 case "EC":
                     this.opCodeEC(this.PC + instructionLocation);
@@ -145,7 +151,7 @@ module TSOS {
 
         public opCodeAD(memoryLocation){
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 this.Acc = value;        
@@ -157,11 +163,11 @@ module TSOS {
 
         public opCode8D(memoryLocation){
             var memory = memoryLocation;
-            var location = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var location = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             (<HTMLInputElement> document.getElementById("statusArea")).value = location.toString();
             if(_Memory.addressSpace[memory+1] == "00"){
                 //_Memory.addressSpace[location] = this.Acc.toString(16);
-                while(location > _CurrentPCB.limitRegister){
+                while(location > _ReadyQueue.q[0].limitRegister){
                     location = location - 256;
                 }  
                 _MemoryManager.storeAccumulator(location);
@@ -173,7 +179,7 @@ module TSOS {
 
         public opCode6D(memoryLocation){
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 this.Acc += value;
@@ -191,7 +197,7 @@ module TSOS {
 
         public opCodeAE(memoryLocation){
             var memory= memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
              if(_Memory.addressSpace[memory+1] == "00"){
                 this.Xreg = value;    
@@ -209,7 +215,7 @@ module TSOS {
 
         public opCodeAC(memoryLocation){
             var memory= memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
              if(_Memory.addressSpace[memory+1] == "00"){
                 this.Yreg = value;    
@@ -229,7 +235,7 @@ module TSOS {
 
         public opCodeEC(memoryLocation){
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 if(value == this.Xreg){
@@ -250,7 +256,7 @@ module TSOS {
             var branchBy = parseInt(_Memory.addressSpace[memory],16);
             if(this.Zflag == 0){
                 var total = branchBy + memory + 1;
-                while(total > _CurrentPCB.limitRegister){
+                while(total > _ReadyQueue.q[0].limitRegister){
                     total = total - 256;
                 }
                 return total;
@@ -262,7 +268,7 @@ module TSOS {
 
         public opCodeEE(memoryLocation){
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _CurrentPCB.baseRegister;
+            var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 _MemoryManager.addressIncrementor(addressPointer, value);
@@ -290,7 +296,7 @@ module TSOS {
                var doneParsing = false;
 
                 while(doneParsing == false){
-                    var currentNum = parseInt(_Memory.addressSpace[startingPoint + _CurrentPCB.baseRegister],16);
+                    var currentNum = parseInt(_Memory.addressSpace[startingPoint + _ReadyQueue.q[0].baseRegister],16);
                     if(currentNum > 64 && currentNum < 90){
                        var index = currentNum - upperCaseHexValue;
                        output += upperCaseAlphabet.charAt(index);

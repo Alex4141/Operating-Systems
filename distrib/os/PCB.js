@@ -12,7 +12,7 @@ var TSOS;
             But for now, less prevalent on current project
             Load CPU state below before switching between PCB's on the queue
             */
-            PCstate, AccState, XregState, YregState, ZflagState, quantum) {
+            PCstate, AccState, XregState, YregState, ZflagState, quantum, processComplete) {
             if (processState === void 0) { processState = "New"; }
             if (pid === void 0) { pid = _TotalProcesses; }
             if (programCounter === void 0) { programCounter = 0; }
@@ -25,6 +25,7 @@ var TSOS;
             if (YregState === void 0) { YregState = 0; }
             if (ZflagState === void 0) { ZflagState = 0; }
             if (quantum === void 0) { quantum = _CPUScheduler.quantum; }
+            if (processComplete === void 0) { processComplete = false; }
             this.processState = processState;
             this.pid = pid;
             this.programCounter = programCounter;
@@ -37,8 +38,10 @@ var TSOS;
             this.YregState = YregState;
             this.ZflagState = ZflagState;
             this.quantum = quantum;
+            this.processComplete = processComplete;
             this.paritionCheck(); // Assign the PCB the right base and limit registers
             _ReadyQueue.enqueue(this); // Push the PCB into the Ready Queue
+            this.PCstate = this.baseRegister; // Change the PC to the proper location
             _PCBContainer.push(this); // TODO implement the ready queue so I can get rid of this Push the object into the array
             _TotalProcesses++; // Increment the total number of processes	
         }

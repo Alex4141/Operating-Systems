@@ -75,6 +75,14 @@ var TSOS;
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             }
+            else if (_CPUScheduler.multipleProcessesRunning == true && _CPUScheduler.checkTurnCompletion() == true) {
+                // If there are no interrupts and multiple processes are running and the quantum has been met,  a context switch
+                this.krnTrace("Context Switch");
+                _CPUScheduler.contextSwitch();
+                _GuiRoutines.updatePCBDisplay();
+                _GuiRoutines.updateCpuDisplay();
+                _GuiRoutines.updateMemoryDisplay();
+            }
             else if (_CPU.isExecuting) {
                 _CPU.cycle();
                 _GuiRoutines.updatePCBDisplay();

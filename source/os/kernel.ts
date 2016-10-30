@@ -86,9 +86,13 @@ module TSOS {
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
-            } else if(_CPUScheduler.checkTurnCompletion() == true){
+            } else if(_CPUScheduler.multipleProcessesRunning == true && _CPUScheduler.checkTurnCompletion() == true){
+                // If there are no interrupts and multiple processes are running and the quantum has been met,  a context switch
+                this.krnTrace("Context Switch");
                 _CPUScheduler.contextSwitch();
-                this.krnInterruptHandler(interrupt.irq, interrupt.params);
+                _GuiRoutines.updatePCBDisplay();
+                _GuiRoutines.updateCpuDisplay(); 
+                _GuiRoutines.updateMemoryDisplay();
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 _CPU.cycle();
                 _GuiRoutines.updatePCBDisplay();

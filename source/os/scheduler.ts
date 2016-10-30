@@ -11,7 +11,7 @@ module TSOS {
 		}
 
 		public checkTurnCompletion(){
-			if(_CurrentPCB.quantum == 0){
+			if(_ReadyQueue.q[0].quantum == 0){
 				return true;
 			} else {
 				return false;
@@ -28,11 +28,11 @@ module TSOS {
 			in it's current state to the PCB of the
 			currently executng process
 			*/
-			_CurrentPCB.PCstate = _CPU.PC;
-			_CurrentPCB.AccState = _CPU.Acc;
-			_CurrentPCB.XregState = _CPU.Xreg;
-			_CurrentPCB.YregState = _CPU.Yreg;
-			_CurrentPCB.ZflagState = _CPU.Zflag;
+			_ReadyQueue.q[0].PCstate = _CPU.PC;
+			_ReadyQueue.q[0].AccState = _CPU.Acc;
+			_ReadyQueue.q[0].XregState = _CPU.Xreg;
+			_ReadyQueue.q[0].YregState = _CPU.Yreg;
+			_ReadyQueue.q[0].ZflagState = _CPU.Zflag;
 		}
 
 		public loadCPUState(){
@@ -41,11 +41,11 @@ module TSOS {
 			for the currently executing process
 			to the CPU
 			*/
-			_CPU.PC = _CurrentPCB.PCstate;
-			_CPU.Acc = _CurrentPCB.AccState;
-			_CPU.Xreg = _CurrentPCB.XregState;
-			_CPU.Yreg = _CurrentPCB.YregState;
-			_CPU.Zflag = _CurrentPCB.ZflagState;
+			_CPU.PC = _ReadyQueue.q[0].PCstate;
+			_CPU.Acc = _ReadyQueue.q[0].AccState;
+			_CPU.Xreg = _ReadyQueue.q[0].XregState;
+			_CPU.Yreg = _ReadyQueue.q[0].YregState;
+			_CPU.Zflag = _ReadyQueue.q[0].ZflagState;
 		}
 
 		public contextSwitch(){
@@ -56,10 +56,18 @@ module TSOS {
 				var temp = _ReadyQueue.dequeue();
 				// Set the current process to the top of the Ready Queue
 				_CurrentPCB = _ReadyQueue[0];
-				// Push the unfinished process back on the Ready Queue
-				_ReadyQueue.enqueue(temp);
+				// Push the unfinished process back on the Ready Queue, reset the quantum
+				if(temp.processComplete == false){
+					temp.quantum = this.quantum;
+					_ReadyQueue.enqueue(temp);
+				}
 				
 				this.loadCPUState();
+
+				// If the Ready Queue only has a single process after the context switch
+				if(_ReadyQueue.getSize() == 1){
+					_CPUScheduler.multipleProcessesRunning = false;
+				}
 			}
 		}
 
