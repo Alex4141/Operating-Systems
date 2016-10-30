@@ -536,8 +536,12 @@ module TSOS {
 
         public shellQuantum(args){
             var newQuantum = args[0];
-            _CPUScheduler.setQuantum(newQuantum);
-            _StdOut.putText("Quantum set to " + newQuantum);
+            if(newQuantum < 1){
+                _StdOut.putText("Invalid quantum");
+            } else {
+                _CPUScheduler.setQuantum(newQuantum);
+                _StdOut.putText("Quantum set to " + newQuantum);
+            }
         }
 
         public shellRunAll(){

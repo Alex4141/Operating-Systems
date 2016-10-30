@@ -39,8 +39,15 @@ module TSOS {
 
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');
-            // TODO: Accumulate CPU usage and profiling statistics here.
-            // Do the real work here. Be sure to set this.isExecuting appropriately. 
+            
+            /* 
+            If a runall is occuring, decrease the current
+            quantum's usage by one.
+            */
+            if(_CPUScheduler.multipleProcessesRunning == true){
+                _CurrentPCB.quantum = _CurrentPCB.quantum - 1;
+            }
+
             const instructionLocation = 1;
 
             switch(_Memory.addressSpace[this.PC]){
