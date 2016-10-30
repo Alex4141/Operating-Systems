@@ -161,6 +161,13 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+            // runall
+            sc = new ShellCommand(this.shellRunAll,
+                                    "runall",
+                                    "- Executes all programs in memory");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             // kill <id> - kills the specified process id.
 
             //
@@ -531,6 +538,13 @@ module TSOS {
             var newQuantum = args[0];
             _CPUScheduler.setQuantum(newQuantum);
             _StdOut.putText("Quantum set to " + newQuantum);
+        }
+
+        public shellRunAll(){
+            // The first process in the ready queue is assigned first for execution 
+            _CurrentPCB = _ReadyQueue[0];
+            _CPU.isExecuting = true;
+            _CurrentPCB.processState = "Running";
         }
     }
 }
