@@ -120,6 +120,9 @@ var TSOS;
             for (var i = 0; i <= 767; i++) {
                 _Memory.addressSpace[i] = "00";
             }
+            this.partitionOneEmpty = true;
+            this.partitionTwoEmpty = true;
+            this.partitionThreeEmpty = true;
         };
         memoryManager.prototype.resetPartition = function (base) {
             var limit = base + 255;

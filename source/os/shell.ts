@@ -552,7 +552,24 @@ module TSOS {
         }
 
         public shellClearMemory(){
+            
+            // Clear the queues
+            if(_ReadyQueue.isEmpty() != true || _ResidentQueue.isEmpty() != true){
+                while(_ReadyQueue.getSize() != 0){
+                    _ReadyQueue.dequeue();
+                }
+                while(_ResidentQueue.getSize() != 0){
+                    _ResidentQueue.dequeue();
+                }
+            }
+
+            // Reset memory
             _MemoryManager.resetMemory();
+
+            // If CPU was executing not anymore, likewise for multiple processes
+            _CPU.isExecuting = false;
+            _CPUScheduler.multipleProcessesRunning = false;            
+
             _StdOut.putText("Reseting memory...");
             _GuiRoutines.updateMemoryDisplay();
         }
