@@ -367,7 +367,25 @@ module TSOS {
                         _StdOut.putText("BSOD returns the blue screen of death error message");
                         break;
                     case "load":
-                        _StdOut.putText("Load verifies that program input is hex");
+                        _StdOut.putText("Load a program into a valid memory partition");
+                        break;
+                    case "run":
+                        _StdOut.putText("Run a program load into memory");
+                        break;
+                    case "clearmem":
+                        _StdOut.putText("Clear all partitions of memory");
+                        break;
+                    case "ps":
+                        _StdOut.putText("Show all processes actively running");
+                        break;
+                    case "quantum":
+                        _StdOut.putText("Change the quantum of the Round Robin Scheduler");
+                        break;
+                    case "runall":
+                        _StdOut.putText("Run all the programs loaded into memory");
+                        break;
+                    case "kill":
+                        _StdOut.putText("Kill a process that is actively running");
                         break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
