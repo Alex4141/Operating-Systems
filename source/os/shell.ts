@@ -600,19 +600,44 @@ module TSOS {
         }
 
         public shellKill(args){
-            var selectedProcess = args[0];
-            var pidFound = false;
-            for(var i=0;i<=_ReadyQueue.getSize()-1;i++){
-                if(_ReadyQueue.q[i].pid == selectedProcess){
-                    // If the Argument matches a PID in the Ready Queue reset the partition and remove it from the queue
-                    _MemoryManager.resetPartition(_ReadyQueue.q[i].baseRegister);
-                    _ReadyQueue.q.splice(i,1);
-                    pidFound = true;
-                    _StdOut.putText("Killing process " + selectedProcess);
+            // There's no processes running
+            if(_ReadyQueue.getSize() == 0){
+                _StdOut.putText("No processes to kill");
+            } else {
+                var selectedProcess = args[0];
+                var pidFound = false;
+
+                // Preserve the state of the CPU
+                _CPUScheduler.saveCPUState();
+                // Stop executing so the Ready Queue doesn't move
+                _CPU.isExecuting = false;
+                for(var i=0;i<=_ReadyQueue.getSize()-1;i++){
+                    if(_ReadyQueue.q[i].pid == selectedProcess){
+                        // If the Argument matches a PID in the Ready Queue reset the partition and remove it from the queue
+                        _MemoryManager.resetPartition(_ReadyQueue.q[i].baseRegister);
+                        _ReadyQueue.q.splice(i,1);
+                        pidFound = true;
+                        _StdOut.putText("Killing process " + selectedProcess);
+                    }
                 }
-            }
-            if(pidFound == false){
-                _StdOut.putText("Process not active");
+
+                // If we never found the PID
+                // Load the CPU state, go back to executing
+                if(pidFound == false){
+                    _StdOut.putText(selectedProcess + " is not an active process");
+                    _CPUScheduler.loadCPUState();
+                    _CPU.isExecuting = true;
+                } else {
+                    // If there's one or no process left, turn off multiple processing
+                    if(_ReadyQueue.getSize() <= 1){
+                        _CPUScheduler.multipleProcessesRunning = false;
+                    }
+                    // If we have any processes remaining, continue CPU execution
+                    if(_ReadyQueue.getSize() > 0) {
+                        _CPUScheduler.loadCPUState();
+                        _CPU.isExecuting = true;
+                    }
+                }
             }
         }
     }
