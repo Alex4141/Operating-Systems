@@ -18,6 +18,10 @@ module TSOS {
 			}
 		}
 
+		public scheduleProcess(PCB: TSOS.PCB){
+			_ReadyQueue.enqueue(PCB);
+		}
+
 		public setQuantum(newQuantum: number){
 			this.quantum = newQuantum;
 		}
@@ -54,12 +58,12 @@ module TSOS {
 				
 				// Pop the current process from the Ready Queue
 				var temp = _ReadyQueue.dequeue();
-				// Set the current process to the top of the Ready Queue
-				_CurrentPCB = _ReadyQueue[0];
 				// Push the unfinished process back on the Ready Queue, reset the quantum
 				if(temp.processComplete == false){
 					temp.quantum = this.quantum;
 					_ReadyQueue.enqueue(temp);
+				} else {
+					_MemoryManager.resetPartition(temp.baseRegister);
 				}
 				
 				this.loadCPUState();

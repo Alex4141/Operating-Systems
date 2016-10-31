@@ -25,6 +25,7 @@ var _Memory; // Ensures _Memory is an instance of the Memory class.
 var _MemoryManager; // Ensures _MemoryManager is an instance of MemoryManager class.
 var _GuiRoutines; // Ensures _GuiRoutines is an instance of Gui Routines class.
 var _CPUScheduler; // Ensures _CPUScheduler is an instance of Scheduler
+var _ResidentQueue; // Ensures _ResidentQueue is an instance of Queue
 var _ReadyQueue; // Ensures _ReadyQueue is an instance of Queue
 var _TerminatedQueue; // Ensures _TerminatedQueue is an instance of Queue	
 var _OSclock = 0; // Page 23.
@@ -35,7 +36,6 @@ var _CommandHistory = []; // All the commands
 var _CommandCycle = 0; // Used to shift through command history
 var _PCBContainer = []; // Holds all created PCB's
 var _TotalProcesses = 0; // Total Processes that have been created
-var _CurrentPCB; // Ensures that CurrentPCB is an instance of PCB
 var _Canvas; // Initialized in Control.hostInit().
 var _CanvasDiv; // Initialized in Control.hostInit().
 var _DrawingContext; // = _Canvas.getContext("2d");  // Assigned here for type safety, but re-initialized in Control.hostInit() for OCD and logic.

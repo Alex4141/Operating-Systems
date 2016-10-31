@@ -40,7 +40,7 @@ var TSOS;
             this.quantum = quantum;
             this.processComplete = processComplete;
             this.paritionCheck(); // Assign the PCB the right base and limit registers
-            _ReadyQueue.enqueue(this); // Push the PCB into the Ready Queue
+            _ResidentQueue.enqueue(this); // Push the PCB into the Resident Queue
             this.PCstate = this.baseRegister; // Change the PC to the proper location
             _PCBContainer.push(this); // TODO implement the ready queue so I can get rid of this Push the object into the array
             _TotalProcesses++; // Increment the total number of processes	

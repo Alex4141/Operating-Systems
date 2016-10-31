@@ -491,26 +491,38 @@ module TSOS {
             var processSelected = args[0];
             var selectedPCB;
 
-
-            // Make sure the PCB with the pid is in the Ready Queue
-            for(var i = 0; i < _ReadyQueue.getSize(); i++){
-                if(_ReadyQueue.q[i].pid == processSelected){
+            // Make sure the PCB with the pid is in the Resident Queue
+            for(var i = 0; i < _ResidentQueue.getSize(); i++){
+                if(_ResidentQueue.q[i].pid == processSelected){
                     // Get the specific PCB so we can use it's attributes
-                    selectedPCB = _ReadyQueue.q[i];
-                    // Remove the selectedPCB from it's location in the Ready Queue
-                    _ReadyQueue.q.splice(i,1);
-                    // Readd the selectedPCB to the front of the Queue
-                    _ReadyQueue.q.splice(0,0,selectedPCB);
+                    selectedPCB = _ResidentQueue.q[i];
+                    // Remove the selectedPCB from it's location in the Resident Queue
+                    _ResidentQueue.q.splice(i,1);
                 }
             }
 
-            // And if so start execution after pointing the PC to the base register
-            if(selectedPCB != null){    
+            
+            if(selectedPCB != null){
+                if(_CPU.isExecuting == true){
+                    /*
+                    If a process is already executing
+                    Enqueue the process to Ready Queue
+                    Indicate that multiple processes are running
+                    */
+                    _ReadyQueue.enqueue(selectedPCB);
+                    _CPUScheduler.multipleProcessesRunning = true;
+                } else {
+                    /* 
+                    If no processes are already executing
+                    Enqueue the process to the Ready Queue
+                    Set the PC and start execution
+                    */
+                    _ReadyQueue.enqueue(selectedPCB);    
                     _StdOut.putText("Executing process " + selectedPCB.pid);
                     _CPU.PC = selectedPCB.baseRegister;
-                    _CurrentPCB = selectedPCB;
                     _CPU.isExecuting = true;
                     selectedPCB.processState = "Running";
+                }
             } else {
                 // Otherwise it's an invalid Process ID
                 _StdOut.putText("Invalid PID");    
@@ -545,13 +557,42 @@ module TSOS {
         }
 
         public shellRunAll(){
-            // The first process in the ready queue is assigned first for execution 
-            var startingProcess = _ReadyQueue.q[0];
-            _CurrentPCB = startingProcess;
-            _CPUScheduler.multipleProcessesRunning = true;
-            _CPU.PC = startingProcess.baseRegister;
-            _CPU.isExecuting = true;
-            _CurrentPCB.processState = "Running";
+            // No processes currently executing or waiting to be executed
+            if(_ResidentQueue.getSize() == 0 && _ReadyQueue.getSize() == 0){
+                _StdOut.putText("No processes to be ran");
+            } else if(_ResidentQueue.getSize() > 0){
+                // Get the processes from the Resident List, move them to Ready Queue
+                while(_ResidentQueue.getSize() != 0){
+                    _CPUScheduler.scheduleProcess(_ResidentQueue.q[0]);
+                    _ResidentQueue.dequeue();
+                }
+
+                // If the CPU is already executing, just indicate multiple processes are running
+                if(_CPU.isExecuting == true){
+                    _CPUScheduler.multipleProcessesRunning = true;
+                } else if(_ReadyQueue.getSize() == 1){
+                    // If the CPU wasn't already running and the Ready Queue only has 1 process, it's a regular run
+                    var startingProcess = _ReadyQueue.q[0];
+                    _CPU.PC = startingProcess.baseRegister;
+                    _CPU.isExecuting = true;
+                } else {
+                    // In this case the CPU wasn't already executing and there are multiple processes
+                    var startingProcess = _ReadyQueue.q[0];
+                    _CPUScheduler.multipleProcessesRunning = true;
+                    _CPU.PC = startingProcess.baseRegister;
+                    _CPU.isExecuting = true;
+                }
+
+                // Print the processes to be executed
+                for(var i = 0; i < _ReadyQueue.getSize(); i++){
+                    _StdOut.putText("Executing PID: " + _ReadyQueue.q[i].pid.toString());
+                    if(i != _ReadyQueue.getSize() - 1){
+                        _StdOut.advanceLine();
+                    }
+                }
+            } else {
+                _StdOut.putText("All processes already running");
+            }
         }
     }
 }

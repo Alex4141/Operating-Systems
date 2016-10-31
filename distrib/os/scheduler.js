@@ -19,6 +19,9 @@ var TSOS;
                 return false;
             }
         };
+        scheduler.prototype.scheduleProcess = function (PCB) {
+            _ReadyQueue.enqueue(PCB);
+        };
         scheduler.prototype.setQuantum = function (newQuantum) {
             this.quantum = newQuantum;
         };
@@ -51,12 +54,13 @@ var TSOS;
                 this.saveCPUState();
                 // Pop the current process from the Ready Queue
                 var temp = _ReadyQueue.dequeue();
-                // Set the current process to the top of the Ready Queue
-                _CurrentPCB = _ReadyQueue[0];
                 // Push the unfinished process back on the Ready Queue, reset the quantum
                 if (temp.processComplete == false) {
                     temp.quantum = this.quantum;
                     _ReadyQueue.enqueue(temp);
+                }
+                else {
+                    _MemoryManager.resetPartition(temp.baseRegister);
                 }
                 this.loadCPUState();
                 // If the Ready Queue only has a single process after the context switch

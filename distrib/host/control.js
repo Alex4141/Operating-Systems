@@ -85,6 +85,7 @@ var TSOS;
             _Memory = new TSOS.coreMemory(); //Initialize our core memory
             _MemoryManager = new TSOS.memoryManager(); //Initialize memory manager
             _GuiRoutines = new TSOS.guiRoutines(); // Initializes GUI helpers
+            _ResidentQueue = new TSOS.Queue(); // Initializes the Resident Queue
             _ReadyQueue = new TSOS.Queue(); // Initializes the Ready Queue
             _TerminatedQueue = new TSOS.Queue(); // Initializes the Terminated Queue
             _CPUScheduler = new TSOS.scheduler(); // Initializes the CPU scheduler

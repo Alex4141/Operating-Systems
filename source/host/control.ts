@@ -104,6 +104,7 @@ module TSOS {
             _Memory = new coreMemory();    //Initialize our core memory
             _MemoryManager = new memoryManager();    //Initialize memory manager
             _GuiRoutines = new guiRoutines();    // Initializes GUI helpers
+            _ResidentQueue = new Queue();        // Initializes the Resident Queue
             _ReadyQueue = new Queue();            // Initializes the Ready Queue
             _TerminatedQueue = new Queue();        // Initializes the Terminated Queue
             _CPUScheduler = new scheduler();       // Initializes the CPU scheduler

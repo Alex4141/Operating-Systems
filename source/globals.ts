@@ -30,6 +30,8 @@ var _Memory: TSOS.coreMemory;				// Ensures _Memory is an instance of the Memory
 var _MemoryManager: TSOS.memoryManager;		// Ensures _MemoryManager is an instance of MemoryManager class.
 var _GuiRoutines: TSOS.guiRoutines;			// Ensures _GuiRoutines is an instance of Gui Routines class.
 var _CPUScheduler: TSOS.scheduler;			// Ensures _CPUScheduler is an instance of Scheduler
+
+var _ResidentQueue: TSOS.Queue				// Ensures _ResidentQueue is an instance of Queue
 var _ReadyQueue: TSOS.Queue;				// Ensures _ReadyQueue is an instance of Queue
 var _TerminatedQueue: TSOS.Queue;			// Ensures _TerminatedQueue is an instance of Queue	
 
@@ -44,7 +46,6 @@ var _CommandCycle: number = 0;											// Used to shift through command histor
 
 var _PCBContainer = [];											// Holds all created PCB's
 var _TotalProcesses = 0;										// Total Processes that have been created
-var _CurrentPCB: TSOS.PCB;										// Ensures that CurrentPCB is an instance of PCB
 
 var _Canvas: HTMLCanvasElement;         // Initialized in Control.hostInit().
 var _CanvasDiv: HTMLDivElement;			// Initialized in Control.hostInit().

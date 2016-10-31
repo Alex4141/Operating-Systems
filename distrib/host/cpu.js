@@ -41,12 +41,15 @@ var TSOS;
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             /*
-            If a runall is occuring, decrease the current
-            quantum's usage by one.
+            Decrease the quantum regardless of singular process, or
+            multiple processes. If only one process, when it hits 0
+            reset the quantum
             */
-            if (_CPUScheduler.multipleProcessesRunning == true) {
-                _ReadyQueue.q[0].quantum -= 1;
-                document.getElementById("statusArea").value = _ReadyQueue.q[0].quantum.toString();
+            _ReadyQueue.q[0].quantum -= 1;
+            if (_CPUScheduler.multipleProcessesRunning == false) {
+                if (_ReadyQueue.q[0].quantum == 0) {
+                    _ReadyQueue.q[0].quantum = _CPUScheduler.quantum;
+                }
             }
             var instructionLocation = 1;
             switch (_Memory.addressSpace[this.PC]) {
@@ -95,9 +98,8 @@ var TSOS;
                     else {
                         // Complete execution for a singular process
                         this.opCode00();
-                        _MemoryManager.resetPartition(_CurrentPCB.baseRegister);
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
                         _ReadyQueue.dequeue();
-                        _CurrentPCB = null;
                     }
                     break;
                 case "EC":
@@ -158,7 +160,6 @@ var TSOS;
         Cpu.prototype.opCode8D = function (memoryLocation) {
             var memory = memoryLocation;
             var location = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            document.getElementById("statusArea").value = location.toString();
             if (_Memory.addressSpace[memory + 1] == "00") {
                 //_Memory.addressSpace[location] = this.Acc.toString(16);
                 while (location > _ReadyQueue.q[0].limitRegister) {
