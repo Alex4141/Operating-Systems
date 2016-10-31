@@ -169,7 +169,11 @@ module TSOS {
             _AllCommands.push(sc.command);
 
             // kill <id> - kills the specified process id.
-
+            sc = new ShellCommand(this.shellKill,
+                                    "kill",
+                                    "- Terminates an active process");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -592,6 +596,23 @@ module TSOS {
                 }
             } else {
                 _StdOut.putText("All processes already running");
+            }
+        }
+
+        public shellKill(args){
+            var selectedProcess = args[0];
+            var pidFound = false;
+            for(var i=0;i<=_ReadyQueue.getSize()-1;i++){
+                if(_ReadyQueue.q[i].pid == selectedProcess){
+                    // If the Argument matches a PID in the Ready Queue reset the partition and remove it from the queue
+                    _MemoryManager.resetPartition(_ReadyQueue.q[i].baseRegister);
+                    _ReadyQueue.q.splice(i,1);
+                    pidFound = true;
+                    _StdOut.putText("Killing process " + selectedProcess);
+                }
+            }
+            if(pidFound == false){
+                _StdOut.putText("Process not active");
             }
         }
     }
