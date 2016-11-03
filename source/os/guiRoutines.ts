@@ -88,35 +88,7 @@ module TSOS {
             pcValue.appendChild(document.createTextNode(fixedPC.toString()));	
 		}
 
-        /*public updatePCBDisplay(){
-            // Same situation with the first two methods
-            var table = (<HTMLTableElement> document.getElementById("PCBdisplay"));
-
-            var currPCB = _PCBContainer[0];
-
-            table.deleteRow(1);
-
-            var updatedRow = table.insertRow(1);
-
-            var zValue = updatedRow.insertCell(0);
-            var yValue = updatedRow.insertCell(0);
-            var xValue = updatedRow.insertCell(0);
-            var accValue = updatedRow.insertCell(0);
-            var pcValue = updatedRow.insertCell(0);
-            var pidValue = updatedRow.insertCell(0);
-            var state = updatedRow.insertCell(0);
-
-            // For the time being we only have one program so the PCB never needs to perform a context switch
-            // Due to this, for now the CPU save states will remain 0
-            zValue.appendChild(document.createTextNode("0"));
-            yValue.appendChild(document.createTextNode("0"));
-            xValue.appendChild(document.createTextNode("0"));
-            accValue.appendChild(document.createTextNode("0"));
-            pcValue.appendChild(document.createTextNode("0"));
-            pidValue.appendChild(document.createTextNode(currPCB.pid.toString()));
-            state.appendChild(document.createTextNode(currPCB.processState));
-        }*/
-
+        
         public updatePCBDisplay(){
             // Same situation with the first two methods
             var table = (<HTMLTableElement> document.getElementById("PCBdisplay"));
@@ -144,12 +116,17 @@ module TSOS {
                 var state = updatedRow.insertCell(0);
                 var pidValue = updatedRow.insertCell(0);
 
+                var fixedPC = _ReadyQueue.q[i].PCstate;
+                while(fixedPC > 255){
+                    fixedPC = fixedPC - 256;
+                }
+
                 zValue.appendChild(document.createTextNode(_ReadyQueue.q[i].ZflagState.toString()));
                 yValue.appendChild(document.createTextNode(_ReadyQueue.q[i].YregState.toString()));
                 xValue.appendChild(document.createTextNode(_ReadyQueue.q[i].XregState.toString()));
                 accValue.appendChild(document.createTextNode(_ReadyQueue.q[i].AccState.toString()));
                 irValue.appendChild(document.createTextNode(_Memory.addressSpace[_ReadyQueue.q[i].PCstate]));
-                pcValue.appendChild(document.createTextNode(_ReadyQueue.q[i].PCstate.toString()));
+                pcValue.appendChild(document.createTextNode(fixedPC.toString()));
                 state.appendChild(document.createTextNode(_ReadyQueue.q[i].processState));
                 pidValue.appendChild(document.createTextNode(_ReadyQueue.q[i].pid.toString()));
 
