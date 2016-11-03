@@ -73,13 +73,19 @@ module TSOS {
             var irValue = updatedRow.insertCell(0);
             var pcValue = updatedRow.insertCell(0);
 
+
+            var fixedPC = _CPU.PC;
+            while(fixedPC > 255){
+                fixedPC = fixedPC - 256;
+            }
+
             // Update the new cells with the appropriate values
             zValue.appendChild(document.createTextNode(_CPU.Zflag.toString()));
             yValue.appendChild(document.createTextNode(_CPU.Yreg.toString()));
             xValue.appendChild(document.createTextNode(_CPU.Xreg.toString()));
             accValue.appendChild(document.createTextNode(_CPU.Acc.toString()));
             irValue.appendChild(document.createTextNode(currentInstruction));
-            pcValue.appendChild(document.createTextNode(_CPU.PC.toString()));	
+            pcValue.appendChild(document.createTextNode(fixedPC.toString()));	
 		}
 
         public updatePCBDisplay(){
