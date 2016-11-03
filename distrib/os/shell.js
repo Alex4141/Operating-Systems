@@ -405,6 +405,7 @@ var TSOS;
                 else {
                     // Create a new Process Control Block, because this process is valid
                     var newProcess = new TSOS.PCB();
+                    newProcess.processState = "Ready";
                     //Make an array of the input split it by space
                     var forMemory = document.getElementById("taProgramInput").value.split(" ");
                     newProcess.memorySegementAmount = forMemory.length;

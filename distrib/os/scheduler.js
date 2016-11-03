@@ -57,11 +57,13 @@ var TSOS;
                 // Push the unfinished process back on the Ready Queue, reset the quantum
                 if (temp.processComplete == false) {
                     temp.quantum = this.quantum;
+                    temp.processState = "Ready";
                     _ReadyQueue.enqueue(temp);
                 }
                 else {
                     _MemoryManager.resetPartition(temp.baseRegister);
                 }
+                _ReadyQueue.q[0].processState = "Running";
                 this.loadCPUState();
                 // If the Ready Queue only has a single process after the context switch
                 if (_ReadyQueue.getSize() == 1) {
