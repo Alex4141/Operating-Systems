@@ -73,12 +73,16 @@ var TSOS;
             irValue.appendChild(document.createTextNode(currentInstruction));
             pcValue.appendChild(document.createTextNode(fixedPC.toString()));
         };
-        guiRoutines.prototype.updatePCBDisplay = function () {
+        /*public updatePCBDisplay(){
             // Same situation with the first two methods
-            var table = document.getElementById("PCBdisplay");
+            var table = (<HTMLTableElement> document.getElementById("PCBdisplay"));
+
             var currPCB = _PCBContainer[0];
+
             table.deleteRow(1);
+
             var updatedRow = table.insertRow(1);
+
             var zValue = updatedRow.insertCell(0);
             var yValue = updatedRow.insertCell(0);
             var xValue = updatedRow.insertCell(0);
@@ -86,6 +90,7 @@ var TSOS;
             var pcValue = updatedRow.insertCell(0);
             var pidValue = updatedRow.insertCell(0);
             var state = updatedRow.insertCell(0);
+
             // For the time being we only have one program so the PCB never needs to perform a context switch
             // Due to this, for now the CPU save states will remain 0
             zValue.appendChild(document.createTextNode("0"));
@@ -95,6 +100,39 @@ var TSOS;
             pcValue.appendChild(document.createTextNode("0"));
             pidValue.appendChild(document.createTextNode(currPCB.pid.toString()));
             state.appendChild(document.createTextNode(currPCB.processState));
+        }*/
+        guiRoutines.prototype.updatePCBDisplay = function () {
+            // Same situation with the first two methods
+            var table = document.getElementById("PCBdisplay");
+            var myRows = table.rows.length;
+            if (myRows > 1) {
+                var i = 1;
+                while (i != myRows) {
+                    table.deleteRow(i);
+                    myRows--;
+                }
+            }
+            var incrementor = 1;
+            for (var i = 0; i <= _ReadyQueue.getSize() - 1; i++) {
+                var updatedRow = table.insertRow(incrementor);
+                var zValue = updatedRow.insertCell(0);
+                var yValue = updatedRow.insertCell(0);
+                var xValue = updatedRow.insertCell(0);
+                var accValue = updatedRow.insertCell(0);
+                var irValue = updatedRow.insertCell(0);
+                var pcValue = updatedRow.insertCell(0);
+                var state = updatedRow.insertCell(0);
+                var pidValue = updatedRow.insertCell(0);
+                zValue.appendChild(document.createTextNode(_ReadyQueue.q[i].ZflagState.toString()));
+                yValue.appendChild(document.createTextNode(_ReadyQueue.q[i].YregState.toString()));
+                xValue.appendChild(document.createTextNode(_ReadyQueue.q[i].XregState.toString()));
+                accValue.appendChild(document.createTextNode(_ReadyQueue.q[i].AccState.toString()));
+                irValue.appendChild(document.createTextNode(_Memory.addressSpace[_ReadyQueue.q[i].PCstate]));
+                pcValue.appendChild(document.createTextNode(_ReadyQueue.q[i].PCstate.toString()));
+                state.appendChild(document.createTextNode(_ReadyQueue.q[i].processState));
+                pidValue.appendChild(document.createTextNode(_ReadyQueue.q[i].pid.toString()));
+                incrementor++;
+            }
         };
         return guiRoutines;
     }());
