@@ -541,6 +541,9 @@ module TSOS {
                     */
                     _ReadyQueue.enqueue(selectedPCB);    
                     _StdOut.putText("Executing process " + selectedPCB.pid);
+
+                    _MemoryManager.updateBaseAndLimit(selectedPCB.baseRegister, selectedPCB.limitRegister);
+
                     _CPU.PC = selectedPCB.baseRegister;
                     _CPU.isExecuting = true;
                     selectedPCB.processState = "Running";
@@ -613,12 +616,15 @@ module TSOS {
                     // If the CPU wasn't already running and the Ready Queue only has 1 process, it's a regular run
                     var startingProcess = _ReadyQueue.q[0];
                     _CPU.PC = startingProcess.baseRegister;
+                    _MemoryManager.updateBaseAndLimit(startingProcess.baseRegister, startingProcess.limitRegister);
                     _CPU.isExecuting = true;
                 } else {
                     // In this case the CPU wasn't already executing and there are multiple processes
                     var startingProcess = _ReadyQueue.q[0];
                     _CPUScheduler.multipleProcessesRunning = true;
                     _CPU.PC = startingProcess.baseRegister;
+                    _MemoryManager.updateBaseAndLimit(startingProcess.baseRegister, startingProcess.limitRegister);
+                    _ReadyQueue.q[0].processState = "Running";
                     _CPU.isExecuting = true;
                 }
 

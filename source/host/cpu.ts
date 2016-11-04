@@ -155,6 +155,12 @@ module TSOS {
         public opCodeAD(memoryLocation){
             var memory = memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
+            
+            //Prevents memory out of bounds access
+            while(addressPointer > _ReadyQueue.q[0].limitRegister){
+                addressPointer = addressPointer - 256;
+            }
+            
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 this.Acc = value;        
@@ -182,6 +188,12 @@ module TSOS {
         public opCode6D(memoryLocation){
             var memory = memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
+            
+            //Prevents memory out of bounds access
+            while(addressPointer > _ReadyQueue.q[0].limitRegister){
+                addressPointer = addressPointer - 256;
+            }
+
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 this.Acc += value;
@@ -200,6 +212,12 @@ module TSOS {
         public opCodeAE(memoryLocation){
             var memory= memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
+            
+            //Prevents memory out of bounds access
+            while(addressPointer > _ReadyQueue.q[0].limitRegister){
+                addressPointer = addressPointer - 256;
+            }
+
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
              if(_Memory.addressSpace[memory+1] == "00"){
                 this.Xreg = value;    
@@ -218,6 +236,12 @@ module TSOS {
         public opCodeAC(memoryLocation){
             var memory= memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
+            
+            //Prevents memory out of bounds access
+            while(addressPointer > _ReadyQueue.q[0].limitRegister){
+                addressPointer = addressPointer - 256;
+            }
+
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
              if(_Memory.addressSpace[memory+1] == "00"){
                 this.Yreg = value;    
@@ -238,6 +262,12 @@ module TSOS {
         public opCodeEC(memoryLocation){
             var memory = memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
+            
+            //Prevents memory out of bounds access
+            while(addressPointer > _ReadyQueue.q[0].limitRegister){
+                addressPointer = addressPointer - 256;
+            }
+
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
                 if(value == this.Xreg){
@@ -271,9 +301,15 @@ module TSOS {
         public opCodeEE(memoryLocation){
             var memory = memoryLocation;
             var addressPointer = parseInt(_Memory.addressSpace[memory],16) + _ReadyQueue.q[0].baseRegister;
+            
+            //Prevents memory out of bounds access
+            while(addressPointer > _ReadyQueue.q[0].limitRegister){
+                addressPointer = addressPointer - 256;
+            }
+            var revisedAddress = addressPointer;
             var value = parseInt(_Memory.addressSpace[addressPointer],16);
             if(_Memory.addressSpace[memory+1] == "00"){
-                _MemoryManager.addressIncrementor(addressPointer, value);
+                _MemoryManager.addressIncrementor(revisedAddress, value);
             } else {
                 alert("OP CODE ERROR: EE");
                 this.isExecuting = false;

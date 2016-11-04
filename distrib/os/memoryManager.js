@@ -6,13 +6,17 @@ i.e. the exclusive access to memory
 var TSOS;
 (function (TSOS) {
     var memoryManager = (function () {
-        function memoryManager(partitionOneEmpty, partitionTwoEmpty, partitionThreeEmpty) {
+        function memoryManager(partitionOneEmpty, partitionTwoEmpty, partitionThreeEmpty, memoryBase, memoryLimit) {
             if (partitionOneEmpty === void 0) { partitionOneEmpty = true; }
             if (partitionTwoEmpty === void 0) { partitionTwoEmpty = true; }
             if (partitionThreeEmpty === void 0) { partitionThreeEmpty = true; }
+            if (memoryBase === void 0) { memoryBase = 0; }
+            if (memoryLimit === void 0) { memoryLimit = 0; }
             this.partitionOneEmpty = partitionOneEmpty;
             this.partitionTwoEmpty = partitionTwoEmpty;
             this.partitionThreeEmpty = partitionThreeEmpty;
+            this.memoryBase = memoryBase;
+            this.memoryLimit = memoryLimit;
         }
         memoryManager.prototype.memoryFull = function () {
             if (this.partitionOneEmpty == false && this.partitionTwoEmpty == false && this.partitionThreeEmpty == false) {
@@ -199,6 +203,10 @@ var TSOS;
             var incrementedValue = value + 1;
             var resultValue = incrementedValue.toString(16).toUpperCase();
             _Memory.addressSpace[memoryLocation] = resultValue;
+        };
+        memoryManager.prototype.updateBaseAndLimit = function (base, limit) {
+            this.memoryBase = base;
+            this.memoryLimit = limit;
         };
         return memoryManager;
     }());

@@ -65,6 +65,7 @@ var TSOS;
                 }
                 _ReadyQueue.q[0].processState = "Running";
                 this.loadCPUState();
+                _MemoryManager.updateBaseAndLimit(_ReadyQueue.q[0].baseRegister, _ReadyQueue.q[0].limitRegister);
                 // If the Ready Queue only has a single process after the context switch
                 if (_ReadyQueue.getSize() == 1) {
                     _CPUScheduler.multipleProcessesRunning = false;

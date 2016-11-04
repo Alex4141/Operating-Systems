@@ -10,7 +10,9 @@ module TSOS {
 		
 		constructor(public partitionOneEmpty = true,
 					public partitionTwoEmpty = true,
-					public partitionThreeEmpty = true){
+					public partitionThreeEmpty = true,
+					public memoryBase = 0,
+					public memoryLimit = 0){
 		}
 
 		public memoryFull(): boolean {
@@ -186,6 +188,11 @@ module TSOS {
 			var incrementedValue = value + 1;
 			var resultValue = incrementedValue.toString(16).toUpperCase();
 			_Memory.addressSpace[memoryLocation] = resultValue; 
+		}
+
+		public updateBaseAndLimit(base, limit){
+			this.memoryBase = base;
+			this.memoryLimit = limit;
 		}
 	}
 }
