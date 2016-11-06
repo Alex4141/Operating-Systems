@@ -91,6 +91,7 @@ var TSOS;
             }
             else {
                 this.krnTrace("Idle");
+                _GuiRoutines.updatePCBDisplay();
             }
         };
         //
