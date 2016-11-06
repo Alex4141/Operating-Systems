@@ -64,6 +64,9 @@ module TSOS {
 					temp.processState = "Ready";
 					_ReadyQueue.enqueue(temp);
 				} else {
+					 _StdOut.putText("PID " + temp.pid + " Wait Time: " + temp.waitTime.toString() + " Turnaround Time: " + temp.tTime.toString());
+                     _StdOut.advanceLine();
+                     _StdOut.putText(">");
 					_MemoryManager.resetPartition(temp.baseRegister);
 				}
 				

@@ -51,6 +51,19 @@ var TSOS;
                     _ReadyQueue.q[0].quantum = _CPUScheduler.quantum;
                 }
             }
+            /*
+            Increase the Turnaround time of the current process
+            If a second and third process are running, increase their wait time and turnaround time
+            */
+            _ReadyQueue.q[0].tTime += 1;
+            if (_ReadyQueue.q[1]) {
+                _ReadyQueue.q[1].waitTime += 1;
+                _ReadyQueue.q[1].tTime += 1;
+            }
+            if (_ReadyQueue.q[2]) {
+                _ReadyQueue.q[2].waitTime += 1;
+                _ReadyQueue.q[2].tTime += 1;
+            }
             var instructionLocation = 1;
             switch (_Memory.addressSpace[this.PC]) {
                 case "A9":
@@ -99,6 +112,9 @@ var TSOS;
                         // Complete execution for a singular process
                         this.opCode00();
                         _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _StdOut.putText("PID " + _ReadyQueue.q[0].pid + " Wait Time: " + _ReadyQueue.q[0].waitTime.toString() + " Turnaround Time: " + _ReadyQueue.q[0].tTime.toString());
+                        _StdOut.advanceLine();
+                        _StdOut.putText(">");
                         _ReadyQueue.dequeue();
                     }
                     break;
