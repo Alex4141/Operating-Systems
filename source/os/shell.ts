@@ -532,6 +532,7 @@ module TSOS {
                     Indicate that multiple processes are running
                     */
                     _ReadyQueue.enqueue(selectedPCB);
+                    _StdOut.putText("Executing process " + selectedPCB.pid);
                     _CPUScheduler.multipleProcessesRunning = true;
                 } else {
                     /* 

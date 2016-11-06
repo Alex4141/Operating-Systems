@@ -136,8 +136,15 @@ var TSOS;
                     break;
                 default:
                     alert("Invalid OP Code" + _Memory.addressSpace[this.PC]);
-                    this.isExecuting = false;
-                    break;
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
             }
         };
         Cpu.prototype.opCodeA9 = function (memoryLocation) {
@@ -147,18 +154,38 @@ var TSOS;
         };
         Cpu.prototype.opCodeAD = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            //Prevents memory out of bounds access
-            while (addressPointer > _ReadyQueue.q[0].limitRegister) {
-                addressPointer = addressPointer - 256;
-            }
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
-            if (_Memory.addressSpace[memory + 1] == "00") {
-                this.Acc = value;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            // Make sure the operation isn't trying to access a memory location > 255
+            if (addressPointer > 255) {
+                alert("Illegal memory access attempt. Process Halted.");
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
+                }
+                else {
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
+                }
             }
             else {
-                alert("OP CODE ERROR: AD");
-                this.isExecuting = false;
+                addressPointer = addressPointer + _ReadyQueue.q[0].baseRegister;
+                var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+                if (_Memory.addressSpace[memory + 1] == "00") {
+                    this.Acc = value;
+                }
+                else {
+                    alert("OP CODE ERROR: AD");
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
+                }
             }
         };
         Cpu.prototype.opCode8D = function (memoryLocation) {
@@ -173,23 +200,50 @@ var TSOS;
             }
             else {
                 alert("OP CODE ERROR: 8D");
-                this.isExecuting = false;
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
+                }
+                else {
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
+                }
             }
         };
         Cpu.prototype.opCode6D = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            //Prevents memory out of bounds access
-            while (addressPointer > _ReadyQueue.q[0].limitRegister) {
-                addressPointer = addressPointer - 256;
-            }
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
-            if (_Memory.addressSpace[memory + 1] == "00") {
-                this.Acc += value;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            if (addressPointer > 255) {
+                alert("Illegal memory access attempt. Process Halted.");
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
+                }
+                else {
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
+                }
             }
             else {
-                alert("OP CODE ERROR: 6D");
-                this.isExecuting = false;
+                addressPointer = addressPointer + _ReadyQueue.q[0].baseRegister;
+                var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+                if (_Memory.addressSpace[memory + 1] == "00") {
+                    this.Acc += value;
+                }
+                else {
+                    alert("OP CODE ERROR: 6D");
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
+                }
             }
         };
         Cpu.prototype.opCodeA2 = function (memoryLocation) {
@@ -199,18 +253,37 @@ var TSOS;
         };
         Cpu.prototype.opCodeAE = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            //Prevents memory out of bounds access
-            while (addressPointer > _ReadyQueue.q[0].limitRegister) {
-                addressPointer = addressPointer - 256;
-            }
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
-            if (_Memory.addressSpace[memory + 1] == "00") {
-                this.Xreg = value;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            if (addressPointer > 255) {
+                alert("Illegal memory access attempt. Process Halted.");
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
+                }
+                else {
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
+                }
             }
             else {
-                alert("OP CODE ERROR: AE");
-                this.isExecuting = false;
+                addressPointer = addressPointer + _ReadyQueue.q[0].baseRegister;
+                var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+                if (_Memory.addressSpace[memory + 1] == "00") {
+                    this.Xreg = value;
+                }
+                else {
+                    alert("OP CODE ERROR: AE");
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
+                }
             }
         };
         Cpu.prototype.opCodeA0 = function (memoryLocation) {
@@ -220,18 +293,37 @@ var TSOS;
         };
         Cpu.prototype.opCodeAC = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            //Prevents memory out of bounds access
-            while (addressPointer > _ReadyQueue.q[0].limitRegister) {
-                addressPointer = addressPointer - 256;
-            }
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
-            if (_Memory.addressSpace[memory + 1] == "00") {
-                this.Yreg = value;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            if (addressPointer > 255) {
+                alert("Illegal memory access attempt. Process Halted.");
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
+                }
+                else {
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
+                }
             }
             else {
-                alert("OP CODE ERROR: AC");
-                this.isExecuting = false;
+                addressPointer = addressPointer + _ReadyQueue.q[0].baseRegister;
+                var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+                if (_Memory.addressSpace[memory + 1] == "00") {
+                    this.Yreg = value;
+                }
+                else {
+                    alert("OP CODE ERROR: AC");
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
+                }
             }
         };
         Cpu.prototype.opCodeEA = function () {
@@ -242,23 +334,42 @@ var TSOS;
         };
         Cpu.prototype.opCodeEC = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            //Prevents memory out of bounds access
-            while (addressPointer > _ReadyQueue.q[0].limitRegister) {
-                addressPointer = addressPointer - 256;
-            }
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
-            if (_Memory.addressSpace[memory + 1] == "00") {
-                if (value == this.Xreg) {
-                    this.Zflag = 1;
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            if (addressPointer > 255) {
+                alert("Illegal memory access attempt. Process Halted.");
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
                 }
                 else {
-                    this.Zflag = 0;
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
                 }
             }
             else {
-                alert("OP CODE ERROR: EC");
-                this.isExecuting = false;
+                addressPointer = addressPointer + _ReadyQueue.q[0].baseRegister;
+                var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+                if (_Memory.addressSpace[memory + 1] == "00") {
+                    if (value == this.Xreg) {
+                        this.Zflag = 1;
+                    }
+                    else {
+                        this.Zflag = 0;
+                    }
+                }
+                else {
+                    alert("OP CODE ERROR: EC");
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
+                }
             }
         };
         Cpu.prototype.opCodeD0 = function (memoryLocation) {
@@ -280,19 +391,38 @@ var TSOS;
         };
         Cpu.prototype.opCodeEE = function (memoryLocation) {
             var memory = memoryLocation;
-            var addressPointer = parseInt(_Memory.addressSpace[memory], 16) + _ReadyQueue.q[0].baseRegister;
-            //Prevents memory out of bounds access
-            while (addressPointer > _ReadyQueue.q[0].limitRegister) {
-                addressPointer = addressPointer - 256;
-            }
-            var revisedAddress = addressPointer;
-            var value = parseInt(_Memory.addressSpace[addressPointer], 16);
-            if (_Memory.addressSpace[memory + 1] == "00") {
-                _MemoryManager.addressIncrementor(revisedAddress, value);
+            var addressPointer = parseInt(_Memory.addressSpace[memory], 16);
+            if (addressPointer > 255) {
+                alert("Illegal memory access attempt. Process Halted.");
+                if (_ReadyQueue.getSize() > 1) {
+                    _ReadyQueue.q[0].processComplete = true;
+                    _ReadyQueue.q[0].quantum = 0;
+                }
+                else {
+                    this.isExecuting = false;
+                    _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                    _ReadyQueue.dequeue();
+                }
             }
             else {
-                alert("OP CODE ERROR: EE");
-                this.isExecuting = false;
+                addressPointer = addressPointer + _ReadyQueue.q[0].baseRegister;
+                var revisedAddress = addressPointer;
+                var value = parseInt(_Memory.addressSpace[addressPointer], 16);
+                if (_Memory.addressSpace[memory + 1] == "00") {
+                    _MemoryManager.addressIncrementor(revisedAddress, value);
+                }
+                else {
+                    alert("OP CODE ERROR: EE");
+                    if (_ReadyQueue.getSize() > 1) {
+                        _ReadyQueue.q[0].processComplete = true;
+                        _ReadyQueue.q[0].quantum = 0;
+                    }
+                    else {
+                        this.isExecuting = false;
+                        _MemoryManager.resetPartition(_ReadyQueue.q[0].baseRegister);
+                        _ReadyQueue.dequeue();
+                    }
+                }
             }
         };
         Cpu.prototype.opCodeFF = function () {
