@@ -44,7 +44,7 @@ module TSOS {
             // Load the File System Device Drive
             this.krnTrace("Loading the file system device driver.");
             _krnFileDriver = new DeviceDriverFileSystem();    // Construct it
-            _krnFileDriver.driverEntry();
+            _krnFileDriver.driverEntry();                     // Call its driver entry
             this.krnTrace(_krnKeyboardDriver.status);
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)

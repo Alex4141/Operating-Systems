@@ -588,12 +588,9 @@ var TSOS;
             }
         };
         Shell.prototype.shellFormat = function () {
-            for (var i = 0; i < 256; i++) {
-                var file = i.toString(8);
-                var value = "0000000000000000000000000000000000000000000000000000000000000000";
-                sessionStorage.setItem(file, value);
-            }
-            _StdOut.putText(sessionStorage.getItem('377').toString());
+            // Call the proper Device Driver's format function
+            _krnFileDriver.format();
+            _StdOut.putText("Hard Drive formatted");
         };
         return Shell;
     }());
