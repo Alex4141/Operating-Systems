@@ -107,6 +107,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellKill, "kill", "- Terminates an active process");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
+            // format - Initializes all of the Tracks, their Sectors, their blocks
+            sc = new TSOS.ShellCommand(this.shellFormat, "format", "- Formats the disk");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -582,6 +586,14 @@ var TSOS;
                     }
                 }
             }
+        };
+        Shell.prototype.shellFormat = function () {
+            for (var i = 0; i < 256; i++) {
+                var file = i.toString(8);
+                var value = "0000000000000000000000000000000000000000000000000000000000000000";
+                sessionStorage.setItem(file, value);
+            }
+            _StdOut.putText(sessionStorage.getItem('377').toString());
         };
         return Shell;
     }());
