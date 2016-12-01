@@ -189,6 +189,13 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+            // ls - list all the files on disk
+            sc = new ShellCommand(this.shellList,
+                                    "ls",
+                                    "- List all the files on list");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -723,6 +730,10 @@ module TSOS {
             } else {
                 _StdOut.putText("File System must be formatted beforehand");
             }
+        }
+
+        public shellList(){
+            _krnFileDriver.ls();
         }
     }
 }

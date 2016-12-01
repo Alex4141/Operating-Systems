@@ -72,8 +72,32 @@ var TSOS;
             }
             processedFileName = "1" + this.nextAvailableDataLocale() + processedFileName;
             processedFileName = this.computeZeros(processedFileName);
-            document.getElementById("taProgramInput").value = processedFileName.length.toString();
-            //sessionStorage.setItem(fileIndex,processedFileName);
+            sessionStorage.setItem(fileIndex, processedFileName);
+        };
+        DeviceDriverFileSystem.prototype.ls = function () {
+            // Iterate through the directory
+            for (var i = 1; i < 64; i++) {
+                var key = i.toString(8);
+                var value = sessionStorage.getItem(key).toString();
+                // Find every file name in the directory that's in use
+                if (value.charAt(0) == '1') {
+                    var result = "";
+                    var j = 4;
+                    // Parse the name and convert it from hex to string values
+                    while (value.charAt(j) != '0' && j != value.length) {
+                        var temp = value.charAt(j) + value.charAt(j + 1);
+                        temp = String.fromCharCode(parseInt(temp, 16));
+                        result = result + temp;
+                        j += 2;
+                    }
+                    _StdOut.putText(result);
+                    _StdOut.advanceLine();
+                }
+                else {
+                    continue;
+                }
+            }
+            _StdOut.putText("*Files Found");
         };
         return DeviceDriverFileSystem;
     }(TSOS.DeviceDriver));

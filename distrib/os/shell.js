@@ -115,6 +115,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellCreate, "create", "- Creates a new file name");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
+            // ls - list all the files on disk
+            sc = new TSOS.ShellCommand(this.shellList, "ls", "- List all the files on list");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -618,6 +622,9 @@ var TSOS;
             else {
                 _StdOut.putText("File System must be formatted beforehand");
             }
+        };
+        Shell.prototype.shellList = function () {
+            _krnFileDriver.ls();
         };
         return Shell;
     }());
