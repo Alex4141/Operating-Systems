@@ -182,6 +182,13 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+            // create - Create filenames 
+            sc = new ShellCommand(this.shellCreate,
+                                    "create",
+                                    "- Creates a new file name");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -693,8 +700,29 @@ module TSOS {
 
         public shellFormat(){
             // Call the proper Device Driver's format function
-            _krnFileDriver.format();
-            _StdOut.putText("Hard Drive formatted");
+            if(!_CPU.isExecuting){
+                _krnFileDriver.format();
+                _StdOut.putText("Hard Drive formatted");
+            } else {
+                _StdOut.putText("Cannot format while programs are running");
+            }
+        }
+
+        public shellCreate(args){
+            // Check if the Hard Drive has been formatted
+           if(_krnFileDriver.formatted){
+                var filename = args[0];
+                var fileIndex = _krnFileDriver.nextAvailableFileNameIndex(); 
+                if(fileIndex>0){
+                    // If the index exists (greater than 0) then create a File
+                    _krnFileDriver.createFileName(filename, fileIndex);
+                    _StdOut.putText("File " + filename + " created!");
+                } else {
+                    _StdOut.putText("No space for new files available");
+                }
+            } else {
+                _StdOut.putText("File System must be formatted beforehand");
+            }
         }
     }
 }

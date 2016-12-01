@@ -9,22 +9,71 @@ var TSOS;
 (function (TSOS) {
     var DeviceDriverFileSystem = (function (_super) {
         __extends(DeviceDriverFileSystem, _super);
-        function DeviceDriverFileSystem() {
+        function DeviceDriverFileSystem(formatted) {
+            if (formatted === void 0) { formatted = false; }
             _super.call(this);
+            this.formatted = formatted;
             this.driverEntry = this.krnKbdDriverEntry;
         }
         DeviceDriverFileSystem.prototype.krnKbdDriverEntry = function () {
             // Initialization routine for this, the kernel-mode Keyboard Device Driver.
             this.status = "loaded";
         };
+        DeviceDriverFileSystem.prototype.computeZeros = function (input) {
+            // When rebuilding a value for the key return how many 0's are needed
+            var i = input.length;
+            var result = input;
+            for (i; i < 65; i++) {
+                result = result + 0;
+            }
+            return result;
+        };
         DeviceDriverFileSystem.prototype.format = function () {
             // Initialize all the keys for the Tracks, Sectors, and Blocks
             for (var i = 0; i < 256; i++) {
-                var file = i.toString(8);
+                var key = i.toString(8);
                 var value = "0000000000000000000000000000000000000000000000000000000000000000";
                 // Each key is a number from 0-254 in octal, the value will always be 64 0's on initializtion
-                sessionStorage.setItem(file, value);
+                sessionStorage.setItem(key, value);
             }
+            this.formatted = true;
+        };
+        DeviceDriverFileSystem.prototype.nextAvailableFileNameIndex = function () {
+            // Returns the next available space for a file name, if full return 0
+            for (var i = 1; i < 64; i++) {
+                var key = i.toString(8);
+                var value = sessionStorage.getItem(key).toString();
+                if (value.charAt(0) == '0') {
+                    return key;
+                }
+            }
+            return "0";
+        };
+        DeviceDriverFileSystem.prototype.nextAvailableDataLocale = function () {
+            // Find the next available space for data
+            for (var i = 64; i < 256; i++) {
+                var key = i.toString(8);
+                var value = sessionStorage.getItem(key).toString();
+                if (value.charAt(0) == '0') {
+                    value = "1" + value.substring(1, value.length);
+                    sessionStorage.setItem(key, value);
+                    return key;
+                }
+            }
+        };
+        DeviceDriverFileSystem.prototype.createFileName = function (filename, fileIndex) {
+            // Split the input by character
+            var preProcessedFileName = filename.split("");
+            var processedFileName = "";
+            // Make the output value equal to the Hex Equivalent
+            for (var i = 0; i < preProcessedFileName.length; i++) {
+                preProcessedFileName[i] = preProcessedFileName[i].charCodeAt(0).toString(16);
+                processedFileName = processedFileName + preProcessedFileName[i];
+            }
+            processedFileName = "1" + this.nextAvailableDataLocale() + processedFileName;
+            processedFileName = this.computeZeros(processedFileName);
+            document.getElementById("taProgramInput").value = processedFileName.length.toString();
+            //sessionStorage.setItem(fileIndex,processedFileName);
         };
         return DeviceDriverFileSystem;
     }(TSOS.DeviceDriver));
