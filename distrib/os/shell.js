@@ -123,6 +123,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellWrite, "write", "- Write content to a file");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
+            // read - Read the content of a file
+            sc = new TSOS.ShellCommand(this.shellRead, "read", "- read the content of a file");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -652,6 +656,30 @@ var TSOS;
                         _krnFileDriver.writeFile(content, _krnFileDriver.fileExists(filename));
                         _StdOut.putText("Content written to file " + filename);
                     }
+                }
+                else {
+                    _StdOut.putText("The filename you specified does not exist");
+                }
+            }
+            else {
+                _StdOut.putText("File System must be formatted beforehand");
+            }
+        };
+        Shell.prototype.shellRead = function (args) {
+            // Check if the Hard Drive has been formatted
+            if (_krnFileDriver.formatted) {
+                // Get the filename and check if it exists
+                var filename = args[0];
+                if (_krnFileDriver.fileExists(filename) != "0") {
+                    /*
+                    Take the verified valid file name key
+                    Get the index where content begins
+                    Pass the index to the File Driver Read Function
+                    */
+                    var fileName = _krnFileDriver.fileExists(filename);
+                    var value = sessionStorage.getItem(fileName).toString();
+                    var contentIndex = value.charAt(1) + value.charAt(2) + value.charAt(3);
+                    _krnFileDriver.readFile(contentIndex);
                 }
                 else {
                     _StdOut.putText("The filename you specified does not exist");

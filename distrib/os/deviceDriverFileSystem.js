@@ -136,6 +136,7 @@ var TSOS;
             // Get the file address we're going to write to
             var value = sessionStorage.getItem(key).toString();
             var address = value.charAt(1) + value.charAt(2) + value.charAt(3);
+            //TODO Add to the top some function to clear exisiting then rewrite
             // Split the content into 60 character chunks
             var contentChunks = content.match(/.{1,60}/g);
             var currKey = address;
@@ -152,8 +153,6 @@ var TSOS;
                     var zeros = (contentToHex.length / 2) + 4;
                     contentToHex = "1000" + contentToHex + this.computeNZeros(zeros);
                     sessionStorage.setItem(currKey, contentToHex);
-                    _StdOut.putText(contentToHex);
-                    _StdOut.advanceLine();
                 }
                 else {
                     // Get the link to locate the next index of where the content should be written
@@ -163,10 +162,30 @@ var TSOS;
                         var zeros = (contentToHex.length / 2) + 4;
                         contentToHex = "1" + nextDataLocale + contentToHex + this.computeNZeros(zeros);
                         sessionStorage.setItem(currKey, contentToHex);
-                        _StdOut.putText(contentToHex);
-                        _StdOut.advanceLine();
+                        currKey = nextDataLocale;
                     }
                 }
+            }
+        };
+        DeviceDriverFileSystem.prototype.readFile = function (startingIndex) {
+            // Get the value at this key
+            var value = sessionStorage.getItem(startingIndex).toString();
+            var result = "";
+            var j = 4;
+            // While the value isn't a placeholder or finished convert the value from Hex to ASCII
+            while (value.charAt(j) != '0' && j != value.length) {
+                var temp = value.charAt(j) + value.charAt(j + 1);
+                temp = String.fromCharCode(parseInt(temp, 16));
+                result = result + temp;
+                j += 2;
+            }
+            // Print the result stored text
+            _StdOut.putText(result);
+            // Check if the file is pointing to another index with content
+            // If so recursively call this function with that index
+            var nextIndex = value.charAt(1) + value.charAt(2) + value.charAt(3);
+            if (nextIndex != "000") {
+                this.readFile(nextIndex);
             }
         };
         return DeviceDriverFileSystem;
