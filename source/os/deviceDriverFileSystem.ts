@@ -25,6 +25,14 @@ module TSOS {
         	return result;
         }
 
+        public computeNZeros(input){
+        	var result = "";
+        	for(input; input < 64; input++){
+        		result += "0";
+        	}
+        	return result;
+        }
+
         public format(){
         	// Initialize all the keys for the Tracks, Sectors, and Blocks
         	for(var i = 0; i < 256; i++){
@@ -59,6 +67,7 @@ module TSOS {
         			return key;
         		}
         	}
+        	return "0";
         }
 
         public createFileName(filename, fileIndex){
@@ -99,5 +108,72 @@ module TSOS {
         	}
         	_StdOut.putText("*Files Found")
         }
+
+        public fileExists(filename){
+        	// Go through the possible file names
+        	for(var i = 1; i < 64; i++){
+        		var key = i.toString(8);
+        		var value = sessionStorage.getItem(key).toString();
+        		// If the file exists check it's content for a match
+        		if(value.charAt(0) == '1'){
+        			var result = "";
+        			var j = 4;
+        			while(value.charAt(j) != '0' && j != value.length){
+        				var temp = value.charAt(j) + value.charAt(j+1);
+        				temp = String.fromCharCode(parseInt(temp,16));
+        				result = result + temp;
+        				j += 2;
+        			}
+        			// Compare the param filename to our result
+        			if(filename == result){
+        				return key;
+        			}
+        		}
+        	}
+        	return "0";
+        }
+
+
+        public writeFile(content, key){
+        	// Remove the quotations around the content
+        	content = content.substring(1, content.length - 1);
+        	
+        	// Get the file address we're going to write to
+        	var value = sessionStorage.getItem(key).toString();
+        	var address = value.charAt(1) + value.charAt(2) + value.charAt(3);
+        	
+        	// Split the content into 60 character chunks
+        	var contentChunks = content.match(/.{1,60}/g);
+        	
+        	var currKey = address;	
+        	for(var i = 0; i < contentChunks.length; i++){
+        		// Convert the chunk of ASCII text to Hex
+        		var contentToHex = ""
+        		var currentChunk = contentChunks[i];
+        		for(var j = 0; j < currentChunk.length; j++){
+        			contentToHex += currentChunk.charCodeAt(j).toString(16);
+        		}
+        		// Check if this is the last index of data that needs to be input
+        		// If so just take our current address (key) and compute it's value
+        		if(i == contentChunks.length - 1){
+        			var zeros = (contentToHex.length/2) + 4;
+        			contentToHex = "1000" + contentToHex + this.computeNZeros(zeros);
+        			sessionStorage.setItem(currKey,contentToHex);
+        		} else {
+        			// Get the link to locate the next index of where the content should be written
+        			var nextDataLocale = this.nextAvailableDataLocale();
+        			// Check to see if we have space for it
+        			if(nextDataLocale != "0"){
+        				var zeros = (contentToHex.length/2) + 4;
+        				contentToHex = "1" + nextDataLocale + contentToHex + this.computeNZeros(zeros);
+        				sessionStorage.setItem(currKey,contentToHex);
+        			}
+        			// TODO scenario where we run out of space as we're writing
+        			// Add to the top some function to clear exisiting then rewrite
+        		} 
+        	}
+        }
+
+
 	}
 }

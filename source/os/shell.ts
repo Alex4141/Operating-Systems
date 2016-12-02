@@ -196,6 +196,13 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+            // write  - Write content to a file
+            sc = new ShellCommand(this.shellWrite,
+                                    "write",
+                                    "- Write content to a file");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -733,7 +740,36 @@ module TSOS {
         }
 
         public shellList(){
+            // List all the filenames available
             _krnFileDriver.ls();
+        }
+
+        public shellWrite(args){
+            // Check if the Hard Drive has been formatted
+            if(_krnFileDriver.formatted){
+                // Get the filename and check if it exists
+                var filename = args[0];
+                if(_krnFileDriver.fileExists(filename) != "0"){
+                    // If the file exists format it properly
+                    var content = "";
+                    for(var i = 1; i < args.length; i++){
+                        content += args[i] + " ";
+                    }
+                    content = content.substring(0,content.length - 1);
+                    // Make sure the beginning/ending of the content isn't missing double quotes
+                    if(content.charAt(0) != "\"" || content.charAt(content.length - 1) != "\""){
+                        _StdOut.putText("Input must have double quotes surrounding it");    
+                    } else {
+                        // Pass the content and the key to the filename
+                        _krnFileDriver.writeFile(content, _krnFileDriver.fileExists(filename));
+                        _StdOut.putText("Content written to file " + filename);
+                    }
+                } else {
+                    _StdOut.putText("The filename you specified does not exist");    
+                }
+            } else {
+                _StdOut.putText("File System must be formatted beforehand");    
+            }
         }
     }
 }
