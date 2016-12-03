@@ -210,6 +210,14 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+
+            // delete - Delete the content of a file
+            sc = new ShellCommand(this.shellDelete,
+                                    "delete",
+                                    "- delete the content of a file");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -790,16 +798,34 @@ module TSOS {
                     Get the index where content begins
                     Pass the index to the File Driver Read Function
                     */
-                    var fileName = _krnFileDriver.fileExists(filename);
-                    var value = sessionStorage.getItem(fileName).toString();
+                    var key = _krnFileDriver.fileExists(filename);
+                    var value = sessionStorage.getItem(key).toString();
                     var contentIndex = value.charAt(1) + value.charAt(2) + value.charAt(3);
                     _krnFileDriver.readFile(contentIndex);
                 } else {
                     _StdOut.putText("The filename you specified does not exist");    
                 }
             } else {
-            _StdOut.putText("File System must be formatted beforehand");   
+                _StdOut.putText("File System must be formatted beforehand");   
             }  
+        }
+
+        public shellDelete(args){
+            // Check if the Hard Drive has been formatted
+            if(_krnFileDriver.formatted){
+                // Get the filename and check if it exists
+                var filename = args[0];
+                if(_krnFileDriver.fileExists(filename) != "0"){
+                    // Pass the filename key to the File Driver Delete Function
+                    var key = _krnFileDriver.fileExists(filename);
+                    _krnFileDriver.deleteFileName(key);
+                    _StdOut.putText("Deleted file " + filename);
+                } else {
+                 _StdOut.putText("The filename you specified does not exist");   
+                }
+            } else {
+                _StdOut.putText("File System must be formatted beforehand");
+            }
         }
 
     }

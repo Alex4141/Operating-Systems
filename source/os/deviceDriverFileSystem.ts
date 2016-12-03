@@ -15,16 +15,6 @@ module TSOS {
             this.status = "loaded";
         }
 
-        public computeZeros(input){
-        	// When rebuilding a value for the key return how many 0's are needed
-        	var i = input.length;
-        	var result = input;
-        	for(i; i<65;i++){
-        		result = result + 0;
-        	}
-        	return result;
-        }
-
         public computeNZeros(input){
         	var result = "";
         	for(input; input < 64; input++){
@@ -62,8 +52,8 @@ module TSOS {
         		var key = i.toString(8);
         		var value = sessionStorage.getItem(key).toString();
         		if(value.charAt(0) == '0'){
-        			value = "1" + value.substring(1, value.length);
-        			sessionStorage.setItem(key, value);
+        			var newValue = "1" + value.substring(1, value.length);
+        			sessionStorage.setItem(key, newValue);
         			return key;
         		}
         	}
@@ -74,14 +64,21 @@ module TSOS {
         	// Split the input by character
         	var preProcessedFileName = filename.split("");
         	var processedFileName = "";
+        	
         	// Make the output value equal to the Hex Equivalent
         	for(var i = 0; i < preProcessedFileName.length; i++){
         		preProcessedFileName[i] = preProcessedFileName[i].charCodeAt(0).toString(16);
 				processedFileName = processedFileName + preProcessedFileName[i];         	
         	}
-        	processedFileName = "1" + this.nextAvailableDataLocale() + processedFileName;
-        	processedFileName = this.computeZeros(processedFileName);
+
+        	// Put a "1" for in use, the TSB, the filename, and leftover zeros
+        	var zeros = 4 + (processedFileName.length/2); 
+        	var tsb = this.nextAvailableDataLocale();
+        	processedFileName = "1" + tsb + processedFileName + this.computeNZeros(zeros);  
         	sessionStorage.setItem(fileIndex,processedFileName);
+        	 
+        	//Lastly clear the content of the TSB if something existed prior
+        	this.deleteContent(tsb);
         }
 
         public ls(){
@@ -176,7 +173,6 @@ module TSOS {
         	}
         }
 
-
         public readFile(startingIndex){
         	// Get the value at this key
         	var value = sessionStorage.getItem(startingIndex).toString();
@@ -201,6 +197,54 @@ module TSOS {
         	if(nextIndex != "000"){
         		this.readFile(nextIndex);	
         	}
+        }
+
+        public deleteFileName(key){
+        	// Get the content of the key
+        	var value = sessionStorage.getItem(key).toString();
+
+        	// Get the index of where content is written
+        	var contentKey = value.charAt(1) + value.charAt(2) + value.charAt(3);
+        	// Call the helper function to free up the TSB locations as available
+        	this.freeSpace(contentKey);
+
+        	// Reset the value for the filename
+        	var newValue = "0000000000000000000000000000000000000000000000000000000000000000";
+        	sessionStorage.setItem(key, newValue);
+        }
+
+        public freeSpace(key){
+        	// Get the content of the key
+        	var value = sessionStorage.getItem(key).toString();
+
+        	// Start by grabbing the TSB locale of where content is written next in the file
+        	var contentKey = value.charAt(1) + value.charAt(2) + value.charAt(3);
+
+        	// Unset the value from used "1" to unused "0"
+        	var setToUnused = "0" + value.substring(1);
+        	sessionStorage.setItem(key, setToUnused);
+
+        	// Check if content is extended to another block, make the necessary call
+        	if(contentKey != "000"){
+        		this.freeSpace(contentKey);
+        	}
+        }
+
+        public deleteContent(key){
+			// Get the content of the key
+        	var value = sessionStorage.getItem(key).toString();
+
+        	// Start by grabbing the TSB locale of where content is written next in the file
+        	var contentKey = value.charAt(1) + value.charAt(2) + value.charAt(3);
+
+        	// Reset the value for the filename
+        	var newValue = value.charAt(0) + "000000000000000000000000000000000000000000000000000000000000000";
+        	sessionStorage.setItem(key, newValue);
+
+       		// Check if content is extended to another block, make the necessary call
+        	if(contentKey != "000"){
+        		this.deleteContent(contentKey);
+        	}	
         }
 
 	}
