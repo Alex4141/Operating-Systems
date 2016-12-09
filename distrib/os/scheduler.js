@@ -5,9 +5,11 @@ CPU Scheduler prototype
 var TSOS;
 (function (TSOS) {
     var scheduler = (function () {
-        function scheduler(quantum, multipleProcessesRunning) {
+        function scheduler(scheduleType, quantum, multipleProcessesRunning) {
+            if (scheduleType === void 0) { scheduleType = "rr"; }
             if (quantum === void 0) { quantum = 6; }
             if (multipleProcessesRunning === void 0) { multipleProcessesRunning = false; }
+            this.scheduleType = scheduleType;
             this.quantum = quantum;
             this.multipleProcessesRunning = multipleProcessesRunning;
         }

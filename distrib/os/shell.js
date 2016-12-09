@@ -131,6 +131,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellDelete, "delete", "- delete the content of a file");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
+            // getschedule - Return the type of schedule being used
+            sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", "- Returns the type of schedule being used");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -711,6 +715,9 @@ var TSOS;
             else {
                 _StdOut.putText("File System must be formatted beforehand");
             }
+        };
+        Shell.prototype.shellGetSchedule = function () {
+            _StdOut.putText(_CPUScheduler.scheduleType);
         };
         return Shell;
     }());

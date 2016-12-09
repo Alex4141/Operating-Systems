@@ -218,6 +218,13 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
 
+            // getschedule - Return the type of schedule being used
+            sc = new ShellCommand(this.shellGetSchedule,
+                                    "getschedule",
+                                    "- Returns the type of schedule being used");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -826,6 +833,10 @@ module TSOS {
             } else {
                 _StdOut.putText("File System must be formatted beforehand");
             }
+        }
+
+        public shellGetSchedule(){
+            _StdOut.putText(_CPUScheduler.scheduleType);
         }
 
     }

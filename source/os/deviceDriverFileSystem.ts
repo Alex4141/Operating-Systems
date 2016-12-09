@@ -76,7 +76,7 @@ module TSOS {
         	var tsb = this.nextAvailableDataLocale();
         	processedFileName = "1" + tsb + processedFileName + this.computeNZeros(zeros);  
         	sessionStorage.setItem(fileIndex,processedFileName);
-        	 
+
         	//Lastly clear the content of the TSB if something existed prior
         	this.deleteContent(tsb);
         }

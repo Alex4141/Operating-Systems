@@ -6,7 +6,8 @@ CPU Scheduler prototype
 
 module TSOS {
 	export class scheduler {
-		constructor(public quantum: number = 6,
+		constructor(public scheduleType: string = "rr",
+					public quantum: number = 6,
 					public multipleProcessesRunning: boolean = false){
 		}
 
