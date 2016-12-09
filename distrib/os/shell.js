@@ -438,6 +438,16 @@ var TSOS;
                     // Create a new Process Control Block, because this process is valid
                     var newProcess = new TSOS.PCB();
                     newProcess.processState = "Ready";
+                    // Pull the argument, if its not undefined and the scheduler is priority
+                    // Check to see if priority is a number, if so change the PCB's priority
+                    var priority = args[0];
+                    if (_CPUScheduler.scheduleType == "priority" && priority !== undefined) {
+                        if (priority.match(/^\d+$/)) {
+                            var processed = parseInt(priority[0], 10);
+                            newProcess.priority = processed;
+                            _StdOut.putText(newProcess.priority.toString());
+                        }
+                    }
                     //Make an array of the input split it by space
                     var forMemory = document.getElementById("taProgramInput").value.split(" ");
                     newProcess.memorySegementAmount = forMemory.length;
@@ -790,6 +800,8 @@ var TSOS;
                     else {
                         _StdOut.putText("Setting the scheduler to priority");
                         _CPUScheduler.setSchedulingAlgorithm("priority");
+                        // Make the quantum impossibly high because it's irrelevent in priority
+                        _CPUScheduler.setQuantum(1000000000);
                     }
                     break;
                 default: _StdOut.putText("That is not a valid algorithm");

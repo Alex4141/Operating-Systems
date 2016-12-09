@@ -12,7 +12,7 @@ var TSOS;
             But for now, less prevalent on current project
             Load CPU state below before switching between PCB's on the queue
             */
-            PCstate, AccState, XregState, YregState, ZflagState, quantum, processComplete, waitTime, tTime) {
+            PCstate, AccState, XregState, YregState, ZflagState, quantum, processComplete, waitTime, tTime, priority) {
             if (processState === void 0) { processState = "New"; }
             if (pid === void 0) { pid = _TotalProcesses; }
             if (programCounter === void 0) { programCounter = 0; }
@@ -28,6 +28,7 @@ var TSOS;
             if (processComplete === void 0) { processComplete = false; }
             if (waitTime === void 0) { waitTime = 0; }
             if (tTime === void 0) { tTime = 0; }
+            if (priority === void 0) { priority = 10; }
             this.processState = processState;
             this.pid = pid;
             this.programCounter = programCounter;
@@ -43,6 +44,7 @@ var TSOS;
             this.processComplete = processComplete;
             this.waitTime = waitTime;
             this.tTime = tTime;
+            this.priority = priority;
             this.paritionCheck(); // Assign the PCB the right base and limit registers
             _ResidentQueue.enqueue(this); // Push the PCB into the Resident Queue
             this.PCstate = this.baseRegister; // Change the PC to the proper location

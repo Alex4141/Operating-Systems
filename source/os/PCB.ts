@@ -26,7 +26,8 @@ module TSOS {
 					public quantum: number = _CPUScheduler.quantum,
 					public processComplete: boolean = false,
 					public waitTime: number = 0,
-					public tTime: number = 0){	
+					public tTime: number = 0,
+					public priority: number = 10){	
 					this.paritionCheck();				// Assign the PCB the right base and limit registers
 					_ResidentQueue.enqueue(this);		// Push the PCB into the Resident Queue
 					this.PCstate = this.baseRegister;	// Change the PC to the proper location
