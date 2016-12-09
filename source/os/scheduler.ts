@@ -19,6 +19,14 @@ module TSOS {
 			}
 		}
 
+		public getSchedulingAlgorithm(){
+			return this.scheduleType;
+		}
+
+		public setSchedulingAlgorithm(newAlgorithm: string){
+			this.scheduleType = newAlgorithm;
+		}
+
 		public scheduleProcess(PCB: TSOS.PCB){
 			_ReadyQueue.enqueue(PCB);
 		}

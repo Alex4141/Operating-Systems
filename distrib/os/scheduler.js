@@ -21,6 +21,12 @@ var TSOS;
                 return false;
             }
         };
+        scheduler.prototype.getSchedulingAlgorithm = function () {
+            return this.scheduleType;
+        };
+        scheduler.prototype.setSchedulingAlgorithm = function (newAlgorithm) {
+            this.scheduleType = newAlgorithm;
+        };
         scheduler.prototype.scheduleProcess = function (PCB) {
             _ReadyQueue.enqueue(PCB);
         };

@@ -132,7 +132,11 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
             // getschedule - Return the type of schedule being used
-            sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", "- Returns the type of schedule being used");
+            sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", "- Returns the type of scheduling algorithm being used");
+            this.commandList[this.commandList.length] = sc;
+            _AllCommands.push(sc.command);
+            //setschedule - Set the type of schedule being used
+            sc = new TSOS.ShellCommand(this.shellSetSchedule, "setschedule", "- Set the type of scheduling algorithm being used");
             this.commandList[this.commandList.length] = sc;
             _AllCommands.push(sc.command);
             //
@@ -518,13 +522,18 @@ var TSOS;
             }
         };
         Shell.prototype.shellQuantum = function (args) {
-            var newQuantum = args[0];
-            if (newQuantum < 1) {
-                _StdOut.putText("Invalid quantum");
+            if (_CPUScheduler.getSchedulingAlgorithm() == "rr") {
+                var newQuantum = args[0];
+                if (newQuantum < 1) {
+                    _StdOut.putText("Invalid quantum");
+                }
+                else {
+                    _CPUScheduler.setQuantum(newQuantum);
+                    _StdOut.putText("Quantum set to " + newQuantum);
+                }
             }
             else {
-                _CPUScheduler.setQuantum(newQuantum);
-                _StdOut.putText("Quantum set to " + newQuantum);
+                _StdOut.putText("Scheduling Algorithm must be Round Robin!");
             }
         };
         Shell.prototype.shellRunAll = function () {
@@ -718,6 +727,73 @@ var TSOS;
         };
         Shell.prototype.shellGetSchedule = function () {
             _StdOut.putText(_CPUScheduler.scheduleType);
+        };
+        Shell.prototype.shellSetSchedule = function (args) {
+            var validAlgorithms = ["fcfs", "rr", "priority"];
+            var newSchedule = args[0];
+            // Check the input scheduling algorithm and deal with it appropriately
+            switch (newSchedule) {
+                case "fcfs":
+                    if (_CPUScheduler.getSchedulingAlgorithm() == newSchedule) {
+                        _StdOut.putText("This algorithm is already being used");
+                    }
+                    else {
+                        _StdOut.putText("Setting the scheduler to fcfs");
+                        _CPUScheduler.setSchedulingAlgorithm("fcfs");
+                        // Simulate FCFS by setting the quantum to an impossibly high value
+                        _CPUScheduler.setQuantum(1000000000);
+                        // Check if we need to adjust the PCB's in the Ready Queue
+                        // to reflect this new quantum
+                        if (_ReadyQueue.getSize() > 0) {
+                            // Stop execution
+                            var wasRunning = _CPU.isExecuting;
+                            _CPU.isExecuting = false;
+                            for (var i = 0; i < _ReadyQueue.getSize(); i++) {
+                                _ReadyQueue.q[i].quantum = _CPUScheduler.quantum;
+                            }
+                            // If we were previously executing, continue execution
+                            if (wasRunning == true) {
+                                _CPU.isExecuting = true;
+                            }
+                        }
+                    }
+                    break;
+                case "rr":
+                    if (_CPUScheduler.getSchedulingAlgorithm() == newSchedule) {
+                        _StdOut.putText("This algorithm is already being used");
+                    }
+                    else {
+                        _StdOut.putText("Setting the scheduler to rr");
+                        _CPUScheduler.setSchedulingAlgorithm("rr");
+                        // Set the quantum to the RR to it's default of 6
+                        _CPUScheduler.setQuantum(6);
+                        // Check if we need to adjust the PCB's in the Ready Queue
+                        // to reflect this new quantum
+                        if (_ReadyQueue.getSize() > 0) {
+                            // Stop execution
+                            var wasRunning = _CPU.isExecuting;
+                            _CPU.isExecuting = false;
+                            for (var i = 0; i < _ReadyQueue.getSize(); i++) {
+                                _ReadyQueue.q[i].quantum = _CPUScheduler.quantum;
+                            }
+                            // If we were previously executing, continue execution
+                            if (wasRunning == true) {
+                                _CPU.isExecuting = true;
+                            }
+                        }
+                    }
+                    break;
+                case "priority":
+                    if (_CPUScheduler.getSchedulingAlgorithm() == newSchedule) {
+                        _StdOut.putText("This algorithm is already being used");
+                    }
+                    else {
+                        _StdOut.putText("Setting the scheduler to priority");
+                        _CPUScheduler.setSchedulingAlgorithm("priority");
+                    }
+                    break;
+                default: _StdOut.putText("That is not a valid algorithm");
+            }
         };
         return Shell;
     }());
