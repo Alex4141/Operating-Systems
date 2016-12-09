@@ -74,6 +74,10 @@ var TSOS;
                     _StdOut.putText(">");
                     _MemoryManager.resetPartition(temp.baseRegister);
                 }
+                // If the scheduler is Priority, sort the PCB's before pulling the next one
+                if (_CPUScheduler.scheduleType == "priority") {
+                    this.prioritySwap();
+                }
                 _ReadyQueue.q[0].processState = "Running";
                 this.loadCPUState();
                 _MemoryManager.updateBaseAndLimit(_ReadyQueue.q[0].baseRegister, _ReadyQueue.q[0].limitRegister);
@@ -82,6 +86,20 @@ var TSOS;
                     _CPUScheduler.multipleProcessesRunning = false;
                 }
             }
+        };
+        scheduler.prototype.prioritySwap = function () {
+            // Swap the head of the Queue with the lowest
+            var highestPriorityProcess = _ReadyQueue.q[0];
+            var index = 0;
+            for (var i = 0; i < _ReadyQueue.getSize(); i++) {
+                if (_ReadyQueue.q[i].priority < highestPriorityProcess.priority) {
+                    highestPriorityProcess = _ReadyQueue.q[i];
+                    index = i;
+                }
+            }
+            var temp = _ReadyQueue.q[0];
+            _ReadyQueue.q[0] = highestPriorityProcess;
+            _ReadyQueue.q[index] = temp;
         };
         return scheduler;
     }());

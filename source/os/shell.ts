@@ -694,6 +694,9 @@ module TSOS {
                     _CPU.isExecuting = true;
                 } else {
                     // In this case the CPU wasn't already executing and there are multiple processes
+                    if(_CPUScheduler.scheduleType == "priority"){
+                        _CPUScheduler.prioritySwap();
+                    }
                     var startingProcess = _ReadyQueue.q[0];
                     _CPUScheduler.multipleProcessesRunning = true;
                     _CPU.PC = startingProcess.baseRegister;

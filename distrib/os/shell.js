@@ -445,7 +445,6 @@ var TSOS;
                         if (priority.match(/^\d+$/)) {
                             var processed = parseInt(priority[0], 10);
                             newProcess.priority = processed;
-                            _StdOut.putText(newProcess.priority.toString());
                         }
                     }
                     //Make an array of the input split it by space
@@ -570,6 +569,9 @@ var TSOS;
                 }
                 else {
                     // In this case the CPU wasn't already executing and there are multiple processes
+                    if (_CPUScheduler.scheduleType == "priority") {
+                        _CPUScheduler.prioritySwap();
+                    }
                     var startingProcess = _ReadyQueue.q[0];
                     _CPUScheduler.multipleProcessesRunning = true;
                     _CPU.PC = startingProcess.baseRegister;
