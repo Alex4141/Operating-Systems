@@ -32,6 +32,7 @@ module TSOS {
                 sessionStorage.setItem(key, value);
             }
             this.formatted = true;
+            _GuiRoutines.updateHardDriveDisplay();
         }
 
         public nextAvailableFileNameIndex(){

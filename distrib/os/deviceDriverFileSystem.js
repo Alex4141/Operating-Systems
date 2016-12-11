@@ -35,6 +35,7 @@ var TSOS;
                 sessionStorage.setItem(key, value);
             }
             this.formatted = true;
+            _GuiRoutines.updateHardDriveDisplay();
         };
         DeviceDriverFileSystem.prototype.nextAvailableFileNameIndex = function () {
             // Returns the next available space for a file name, if full return 0

@@ -126,27 +126,6 @@
    </div>
    <br>
 </div>
-  <div style="">
-      <label> CPU Stats</label>
-      <table id="cpuDisplay" border="1" cellpadding="19">
-        <tr>
-          <td> PC </td>
-          <td> IR </td>
-          <td> ACC </td>
-          <td> X </td>
-          <td> Y </td>
-          <td> Z </td>
-        </tr>
-      <tr>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-      </tr>
-      </table>  
-  </div>
   <br>
 
   <label style=""> Memory Stats</label>
@@ -1213,23 +1192,63 @@
 </div>
 <br>
 
-<div>
-  <label> Ready Queue </label>
-  <table id="PCBdisplay" border="1" cellpadding="6" width="200">
-    <tr>
-      <td> PID </td>
-      <td> State </td>
-      <td> PC </td>
-      <td> IR </td>
-      <td> ACC </td>
-      <td> X </td>
-      <td> Y </td>
-      <td> Z </td>
-    </tr>
-    <tr>
+<div style="float: left">
+    <label> CPU Stats</label>
+    <table id="cpuDisplay" border="1" cellpadding="19">
+        <tr>
+            <td> PC </td>
+            <td> IR </td>
+            <td> ACC </td>
+            <td> X </td>
+            <td> Y </td>
+            <td> Z </td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+    </table> 
+</div> 
+<br>
+
+<div style="float: left; padding-left: 5%;">
+    <label> Ready Queue </label>
+    <table id="PCBdisplay" border="1" cellpadding="6" width="200">
+        <tr>
+          <td> PID </td>
+          <td> State </td>
+          <td> PC </td>
+          <td> IR </td>
+          <td> ACC </td>
+          <td> X </td>
+          <td> Y </td>
+          <td> Z </td>
+        </tr>
   </table>
 </div>
-<br><br><br><br><br>
+
+<div id="diskDisplay" style="float: left; padding-left: 5%">
+    <label> Hard Drive </label>
+    <table id="fileDisplay" border="1" cellpadding="6" width="200">
+        <tr>
+          <td>0x0000</td>
+    <td>00</td>
+    <td>00</td>
+    <td>00</td>
+    <td>00</td>
+    <td>00</td>
+    <td>00</td>
+    <td>00</td>
+    <td>00</td>
+        </tr>
+    </table>
+</div>
+
+<br><br>
 <p class="footerText" style="clear:both;">
    <br>
    Copyright &copy; 2008 - 2015 No Rights Reserved.

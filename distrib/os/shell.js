@@ -650,6 +650,7 @@ var TSOS;
                 if (fileIndex > 0) {
                     // If the index exists (greater than 0) then create a File
                     _krnFileDriver.createFileName(filename, fileIndex);
+                    _GuiRoutines.updateHardDriveDisplay();
                     _StdOut.putText("File " + filename + " created!");
                 }
                 else {
@@ -683,6 +684,7 @@ var TSOS;
                     else {
                         // Pass the content and the key to the filename
                         _krnFileDriver.writeFile(content, _krnFileDriver.fileExists(filename));
+                        _GuiRoutines.updateHardDriveDisplay();
                         _StdOut.putText("Content written to file " + filename);
                     }
                 }
@@ -727,6 +729,7 @@ var TSOS;
                     // Pass the filename key to the File Driver Delete Function
                     var key = _krnFileDriver.fileExists(filename);
                     _krnFileDriver.deleteFileName(key);
+                    _GuiRoutines.updateHardDriveDisplay();
                     _StdOut.putText("Deleted file " + filename);
                 }
                 else {

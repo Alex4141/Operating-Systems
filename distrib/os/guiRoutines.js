@@ -110,6 +110,40 @@ var TSOS;
                 incrementor++;
             }
         };
+        guiRoutines.prototype.updateHardDriveDisplay = function () {
+            // Only update the file system display if the fsDD is formatted
+            if (_krnFileDriver.formatted) {
+                var table = document.getElementById("fileDisplay");
+                // Delete every single row of data
+                var myRows = table.rows.length;
+                while (myRows != 0) {
+                    table.deleteRow(0);
+                    myRows -= 1;
+                }
+                // Iterate to create the table
+                for (var i = 0; i < 256; i++) {
+                    var updateRow = table.insertRow(i);
+                    // Get the Octal Key and it's value
+                    var key = i.toString(8);
+                    var value = sessionStorage.getItem(key).toString();
+                    if (value.length != 124) {
+                        while (value.length != 124) {
+                            value = value + "0";
+                        }
+                    }
+                    var content = updateRow.insertCell(0);
+                    var tsb = updateRow.insertCell(0);
+                    if (parseInt(key, 10) < 10) {
+                        key = "00" + key;
+                    }
+                    else if (parseInt(key, 10) < 100) {
+                        key = "0" + key;
+                    }
+                    tsb.appendChild(document.createTextNode(key));
+                    content.appendChild(document.createTextNode(value));
+                }
+            }
+        };
         return guiRoutines;
     }());
     TSOS.guiRoutines = guiRoutines;
