@@ -67,7 +67,7 @@ module TSOS {
         	var processedFileName = "";
         	
         	// Make the output value equal to the Hex Equivalent
-        	for(var i = 0; i < preProcessedFileName.length; i++){
+        	for(var i = 0; i < 60; i++){
         		preProcessedFileName[i] = preProcessedFileName[i].charCodeAt(0).toString(16);
 				processedFileName = processedFileName + preProcessedFileName[i];         	
         	}
