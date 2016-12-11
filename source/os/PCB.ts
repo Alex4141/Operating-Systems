@@ -27,7 +27,9 @@ module TSOS {
 					public processComplete: boolean = false,
 					public waitTime: number = 0,
 					public tTime: number = 0,
-					public priority: number = 10){	
+					public priority: number = 10,
+					public processInMemory: boolean = false,
+					public locationInMemory: string = ""){	
 					this.paritionCheck();				// Assign the PCB the right base and limit registers
 					_ResidentQueue.enqueue(this);		// Push the PCB into the Resident Queue
 					this.PCstate = this.baseRegister;	// Change the PC to the proper location

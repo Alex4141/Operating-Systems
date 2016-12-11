@@ -67,7 +67,7 @@ module TSOS {
         	var processedFileName = "";
         	
         	// Make the output value equal to the Hex Equivalent
-        	for(var i = 0; i < 60; i++){
+        	for(var i = 0; i < preProcessedFileName.length; i++){
         		preProcessedFileName[i] = preProcessedFileName[i].charCodeAt(0).toString(16);
 				processedFileName = processedFileName + preProcessedFileName[i];         	
         	}
@@ -248,5 +248,106 @@ module TSOS {
         	}	
         }
 
-	}
+        public rollIn(inputArray, pcb){
+            var content = "";
+
+            // Create the string with necessary content
+            for(var i = 0; i < inputArray.length; i++){
+                switch(inputArray[i]){
+                    case "0":
+                        inputArray[i] = "00";
+                        content = content + inputArray[i];
+                    break;
+                    case "A":
+                        inputArray[i] = "0A";
+                        content = content + inputArray[i];
+                    break;
+                    case "B":
+                        inputArray[i] = "0B";
+                        content = content + inputArray[i];
+                    break;
+                    case "C":
+                        inputArray[i] = "0C";
+                        content = content + inputArray[i];
+                    break;
+                    case "D":
+                        inputArray[i] = "0D";
+                        content = content + inputArray[i];
+                    break;
+                    case "E":
+                        inputArray[i] = "0E";
+                        content = content + inputArray[i];
+                    break;
+                    case "F":
+                        inputArray[i] = "0F";
+                        content = content + inputArray[i];
+                    break;
+                    case "1":
+                        inputArray[i] = "01";
+                        content = content + inputArray[i];
+                    break;
+                    case "2":
+                        inputArray[i] = "02";
+                        content = content + inputArray[i];
+                    break;
+                    case "3":
+                        inputArray[i] = "03";
+                        content = content + inputArray[i];
+                    break;
+                    case "4":
+                        inputArray[i] = "04";
+                        content = content + inputArray[i];
+                    break;
+                    case "5":
+                        inputArray[i] = "05";
+                        content = content + inputArray[i];
+                    break;
+                    case "6":
+                        inputArray[i] = "06";
+                        content = content + inputArray[i];
+                    break;
+                    case "7":
+                        inputArray[i] = "07";
+                        content = content + inputArray[i];
+                    break;
+                    case "8":
+                        inputArray[i] = "08";
+                        content = content + inputArray[i];
+                    break;
+                    case "9":
+                        inputArray[i] = "09";
+                        content = content + inputArray[i];
+                    break;
+                    default:
+                        if(inputArray[i].length > 2){
+                            inputArray[i] = inputArray.substring(0, 2);
+                        }
+                        content = content + inputArray[i];
+                    break;
+                }
+            }            
+                
+            var contentChunks = content.match(/.{1,120}/g);
+
+            var currKey = this.nextAvailableDataLocale();
+            pcb.locationInMemory = currKey;
+
+            for(var j = 0; j < contentChunks.length; j++){
+                var nthContentChunk = contentChunks[j];
+                if(j == contentChunks.length - 1){
+                    //var zeros = (nthContentChunk.length/2) + 4;
+                    nthContentChunk = "1000" +nthContentChunk; // + this.computeNZeros(zeros);
+                    sessionStorage.setItem(currKey, nthContentChunk);
+                } else {
+                    if(currKey != "0"){
+                        var next = this.nextAvailableDataLocale();
+                        //var zeros = (nthContentChunk.length/2) + 4;
+                        nthContentChunk = "1" + next + nthContentChunk; // + this.computeNZeros(zeros);
+                        sessionStorage.setItem(currKey,nthContentChunk);
+                        currKey = next; //Reset the next available location for this
+                    }
+                }
+            }
+	    }
+    }
 }

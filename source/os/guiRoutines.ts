@@ -153,12 +153,10 @@ module TSOS {
                     var key = i.toString(8);
                     var value = sessionStorage.getItem(key).toString();
                     
-                    if(value.length != 124){
-                        while(value.length != 124){
-                            value = value + "0";
-                        }
+                    while(value.length != 124){
+                        value = value + "0";
                     }
-
+                    
                     var content: any = updateRow.insertCell(0);
                     var tsb: any = updateRow.insertCell(0);
 

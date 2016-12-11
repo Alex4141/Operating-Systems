@@ -126,10 +126,8 @@ var TSOS;
                     // Get the Octal Key and it's value
                     var key = i.toString(8);
                     var value = sessionStorage.getItem(key).toString();
-                    if (value.length != 124) {
-                        while (value.length != 124) {
-                            value = value + "0";
-                        }
+                    while (value.length != 124) {
+                        value = value + "0";
                     }
                     var content = updateRow.insertCell(0);
                     var tsb = updateRow.insertCell(0);
