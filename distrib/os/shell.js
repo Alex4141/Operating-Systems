@@ -447,6 +447,9 @@ var TSOS;
                         }
                         // Make an array of the input split it by space
                         var forMemory = document.getElementById("taProgramInput").value.split(" ");
+                        while (forMemory.length != 256) {
+                            forMemory.push("00");
+                        }
                         newProcess.memorySegementAmount = forMemory.length;
                         // Perform the initial Roll In for the process to Memory
                         _krnFileDriver.rollIn(forMemory, newProcess);
@@ -472,6 +475,9 @@ var TSOS;
                     }
                     //Make an array of the input split it by space
                     var forMemory = document.getElementById("taProgramInput").value.split(" ");
+                    while (forMemory.length != 256) {
+                        forMemory.push("00");
+                    }
                     newProcess.memorySegementAmount = forMemory.length;
                     _GuiRoutines.updatePCBDisplay();
                     // Load Memory with the validated input.

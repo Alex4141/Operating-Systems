@@ -81,15 +81,20 @@ var TSOS;
                 // If the current PCB has it's program in memory
                 if (_ReadyQueue.q[0].processInMemory == true) {
                     // Take the process in partition 3 of memory and "roll in" to disk
-                    var forDisk = _Memory.addressSpace.slice(512);
+                    var forDisk = _Memory.addressSpace.splice(512);
                     _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
                     _GuiRoutines.updateHardDriveDisplay();
+                    // Reset the third Partition
                     _MemoryManager.resetPartition(512);
-                    // Take the process in memory, and "roll out" to memory
+                    // Get the Process residing in memory
                     var key = _ReadyQueue.q[0].locationInMemory;
-                    var check = _krnFileDriver.rollOut(key, _ReadyQueue.q[0].memorySegementAmount);
-                    alert(check);
-                    _GuiRoutines.updateHardDriveDisplay();
+                    var forMainMemory = _krnFileDriver.rollOut(key, _ReadyQueue.q[0].memorySegementAmount);
+                    _MemoryManager.loadMemory(_ReadyQueue.q[0], forMainMemory);
+                    _ReadyQueue.q[0].processInMemory = false;
+                    _ReadyQueue.q[0].locationInMemory = "";
+                    _PartitionThreePCB = _ReadyQueue.q[0];
+                    // Set the mm partition three empty to false here
+                    _GuiRoutines.updateMemoryDisplay();
                 }
                 _ReadyQueue.q[0].processState = "Running";
                 this.loadCPUState();
@@ -120,6 +125,48 @@ var TSOS;
 })(TSOS || (TSOS = {}));
 /*
 
+
+                    // Take the process in partition 3 of memory and "roll in" to disk
+                    var forDisk = _Memory.addressSpace.splice(512);
+                    _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
+                    _GuiRoutines.updateHardDriveDisplay();
+
+                    // Reset the third Partition
+                    _MemoryManager.resetPartition(512);
+
+                    // Get the Process residing in memory
+                    var key = _ReadyQueue.q[0].locationInMemory;
+                    var forMainMemory = _krnFileDriver.rollOut(key, _ReadyQueue.q[0].memorySegementAmount);
+
+                    _MemoryManager.loadMemory(_ReadyQueue.q[0], forMainMemory);
+                    _ReadyQueue.q[0].processInMemory = false;
+                    _ReadyQueue.q[0].locationInMemory = "";
+                    _PartitionThreePCB = _ReadyQueue.q[0];
+                    // Set the mm partition three empty to false here
+                    _GuiRoutines.updateMainMemoryDisplay();
+                }
+
+// If the current PCB has it's program in memory
+                if(_ReadyQueue.q[0].processInMemory == true){
+                    // Take the process in partition 3 of memory and "roll in" to disk
+                    var forDisk = _Memory.addressSpace.slice(512);
+                    _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
+                    _GuiRoutines.updateHardDriveDisplay();
+                    _MemoryManager.resetPartition(512);
+
+                    // Take the process in memory, and "roll out" to memory
+                    var key = _ReadyQueue.q[0].locationInMemory;
+                    var toLoad = _krnFileDriver.rollOut(key, _ReadyQueue.q[0].memorySegementAmount);
+                    _MemoryManager.loadMemory(_ReadyQueue.q[0], toLoad);
+                    _ReadyQueue.q[0].processInMemory = false;
+                    _ReadyQueue.q[0].locationInMemory = "";
+                    _PartitionThreePCB = _ReadyQueue.q[0];
+                    _GuiRoutines.updateMemoryDisplay();
+                }
+
+
+
+
 // If the current PCB has it's program in memory
                 if(_ReadyQueue.q[0].processInMemory == true){
                     // Take the process in partition 3 of memory and "roll in" to disk
@@ -140,4 +187,7 @@ var TSOS;
 
                     _GuiRoutines.updateHardDriveDisplay();
                 }
+
+                _ReadyQueue.q[0].processInMemory = false; _PartitionThreePCB = _ReadyQueue.q[0];
+                    _MemoryManager.partitionThreeEmpty = false;
 */ 

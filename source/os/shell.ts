@@ -564,6 +564,9 @@ module TSOS {
 
                             // Make an array of the input split it by space
                             var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                            while(forMemory.length != 256){
+                                forMemory.push("00");
+                            }
                             newProcess.memorySegementAmount = forMemory.length;
 
                             // Perform the initial Roll In for the process to Memory
@@ -591,6 +594,9 @@ module TSOS {
 
                         //Make an array of the input split it by space
                         var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                        while(forMemory.length != 256){
+                                forMemory.push("00");
+                            }
                         newProcess.memorySegementAmount = forMemory.length;
                         _GuiRoutines.updatePCBDisplay();
 
