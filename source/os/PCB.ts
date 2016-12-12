@@ -51,7 +51,10 @@ module TSOS {
 				_MemoryManager.partitionTwoEmpty = false;
 			} else if(_MemoryManager.partitionThreeEmpty == true){
 				this.setBaseAndLimit(512, 767);
+				_PartitionThreePCB = this;
 				_MemoryManager.partitionThreeEmpty = false;
+			} else {
+				this.setBaseAndLimit(512, 767);
 			}
 		}
 

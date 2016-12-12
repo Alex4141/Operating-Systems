@@ -223,8 +223,7 @@ var TSOS;
         };
         DeviceDriverFileSystem.prototype.rollIn = function (inputArray, pcb) {
             var content = "";
-            // Create the string with necessary content
-            for (var i = 0; i < inputArray.length; i++) {
+            for (var i = 0; i < pcb.memorySegementAmount; i++) {
                 switch (inputArray[i]) {
                     case "0":
                         inputArray[i] = "00";
@@ -301,6 +300,7 @@ var TSOS;
             var contentChunks = content.match(/.{1,120}/g);
             var currKey = this.nextAvailableDataLocale();
             pcb.locationInMemory = currKey;
+            pcb.processInMemory = true;
             for (var j = 0; j < contentChunks.length; j++) {
                 var nthContentChunk = contentChunks[j];
                 if (j == contentChunks.length - 1) {
@@ -319,7 +319,76 @@ var TSOS;
                 }
             }
         };
+        DeviceDriverFileSystem.prototype.rollOut = function (key, len) {
+            // Get the value of the key
+            var value = sessionStorage.getItem(key).toString();
+            // Remove the control characters
+            var curr = value.substring(4);
+            // Split it up by every two characters
+            var results = curr.match(/.{1,2}/g);
+            var newIndex = value.charAt(1) + value.charAt(2) + value.charAt(3);
+            if (newIndex != "000") {
+                var trim = results.length - len;
+                var forConcat = this.rollOut(newIndex, trim);
+                results = results.concat(forConcat);
+                return results;
+            }
+            else {
+                if (results.length > len) {
+                    var trim = results.length - len;
+                    results = results.slice(0, trim);
+                }
+                return results;
+            }
+        };
         return DeviceDriverFileSystem;
     }(TSOS.DeviceDriver));
     TSOS.DeviceDriverFileSystem = DeviceDriverFileSystem;
 })(TSOS || (TSOS = {}));
+/*
+
+
+            if(results.length > len){
+                var trim = results.length - len;
+                results = results.slice(0, trim);
+                return results;
+            }
+
+
+    else {
+              var newKey = value.charAt(1) + value.charAt(2) + value.charAt(3);
+              var newLen = results.length - len;
+              var forConcat = this.rollOut(newKey, newLen);
+              results.concat(forConcat);
+              return results;
+            }
+
+
+
+        public rollOut(outputArray, pcb, key){
+            // Get the value
+            var value = sessionStorage.getItem(key);
+            var j = 4;
+
+            _StdOut.putText("Roll Out");
+            // While the value isn't a placeholder or finished, push to output
+            while(value.charAt(j) != '0' && j != value.length){
+                var temp = value.charAt(j) + value.charAt(j+1);
+                outputArray.push(temp);
+                j += 2;
+            }
+
+            // Check if the file is pointing to another index with content
+            // If so recursively call this function with that index
+            var nextIndex = value.charAt(1) + value.charAt(2) + value.charAt(3);
+            if(nextIndex != "000"){
+                this.rollOut(outputArray, pcb, nextIndex);
+            } else {
+                // Send the pcb and the array to be loaded by the Memory Manager
+                // Set the third partition to this pcb
+                pcb.processInMemory = false;
+                _PartitionThreePCB = pcb;
+                _MemoryManager.loadMemory(pcb, outputArray);
+            }
+        }
+*/ 

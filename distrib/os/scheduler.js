@@ -78,6 +78,19 @@ var TSOS;
                 if (_CPUScheduler.scheduleType == "priority") {
                     this.prioritySwap();
                 }
+                // If the current PCB has it's program in memory
+                if (_ReadyQueue.q[0].processInMemory == true) {
+                    // Take the process in partition 3 of memory and "roll in" to disk
+                    var forDisk = _Memory.addressSpace.slice(512);
+                    _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
+                    _GuiRoutines.updateHardDriveDisplay();
+                    _MemoryManager.resetPartition(512);
+                    // Take the process in memory, and "roll out" to memory
+                    var key = _ReadyQueue.q[0].locationInMemory;
+                    var check = _krnFileDriver.rollOut(key, _ReadyQueue.q[0].memorySegementAmount);
+                    alert(check);
+                    _GuiRoutines.updateHardDriveDisplay();
+                }
                 _ReadyQueue.q[0].processState = "Running";
                 this.loadCPUState();
                 _MemoryManager.updateBaseAndLimit(_ReadyQueue.q[0].baseRegister, _ReadyQueue.q[0].limitRegister);
@@ -105,3 +118,26 @@ var TSOS;
     }());
     TSOS.scheduler = scheduler;
 })(TSOS || (TSOS = {}));
+/*
+
+// If the current PCB has it's program in memory
+                if(_ReadyQueue.q[0].processInMemory == true){
+                    // Take the process in partition 3 of memory and "roll in" to disk
+                    var forDisk = _Memory.addressSpace.slice(512);
+                    //for(var k = 0; k < forDisk.length; k++){
+                        //(<HTMLTextAreaElement>document.getElementById("taProgramInput")).value = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value + " " + forDisk[k];
+                    //}
+                    _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
+                    _GuiRoutines.updateHardDriveDisplay();
+                
+                    
+                    // Take the process in memory, and "roll out" to memory
+                    _MemoryManager.resetPartition(512);
+                    var results = [];
+                    _ReadyQueue.q[0] = _PartitionThreePCB
+                    _krnFileDriver.rollOut(results, _PartitionThreePCB, _PartitionThreePCB.locationInMemory);
+                    
+
+                    _GuiRoutines.updateHardDriveDisplay();
+                }
+*/ 

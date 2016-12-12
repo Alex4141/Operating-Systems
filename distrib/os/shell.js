@@ -436,8 +436,7 @@ var TSOS;
                     if (_krnFileDriver.formatted) {
                         // Create a new Process Control Block, because process is valid
                         var newProcess = new TSOS.PCB();
-                        // Since all memory partitions full this process is marked for the harddrive
-                        newProcess.processInMemory = true;
+                        newProcess.processState = "Ready";
                         // Change the process's priority if the scheduler is in priority
                         var priority = args[0];
                         if (_CPUScheduler.scheduleType == "priority" && priority !== undefined) {

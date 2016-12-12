@@ -33,7 +33,9 @@ var _CPUScheduler: TSOS.scheduler;			// Ensures _CPUScheduler is an instance of 
 
 var _ResidentQueue: TSOS.Queue				// Ensures _ResidentQueue is an instance of Queue
 var _ReadyQueue: TSOS.Queue;				// Ensures _ReadyQueue is an instance of Queue
-var _TerminatedQueue: TSOS.Queue;			// Ensures _TerminatedQueue is an instance of Queue	
+var _TerminatedQueue: TSOS.Queue;			// Ensures _TerminatedQueue is an instance of Queue
+
+var _PartitionThreePCB: TSOS.PCB;	
 
 var _OSclock: number = 0;  // Page 23.
 

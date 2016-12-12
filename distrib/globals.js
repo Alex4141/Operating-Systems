@@ -27,7 +27,8 @@ var _GuiRoutines; // Ensures _GuiRoutines is an instance of Gui Routines class.
 var _CPUScheduler; // Ensures _CPUScheduler is an instance of Scheduler
 var _ResidentQueue; // Ensures _ResidentQueue is an instance of Queue
 var _ReadyQueue; // Ensures _ReadyQueue is an instance of Queue
-var _TerminatedQueue; // Ensures _TerminatedQueue is an instance of Queue	
+var _TerminatedQueue; // Ensures _TerminatedQueue is an instance of Queue
+var _PartitionThreePCB;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.
 var _UniqueKeys = [186, 187, 188, 189, 190, 191, 192, 219, 221, 222]; // keyCodes for Keyboard keys with unique handling
