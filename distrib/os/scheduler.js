@@ -80,20 +80,27 @@ var TSOS;
                 }
                 // If the current PCB has it's program in memory
                 if (_ReadyQueue.q[0].processInMemory == true) {
-                    // Take the process in partition 3 of memory and "roll in" to disk
-                    var forDisk = _Memory.addressSpace.splice(512);
-                    _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
-                    _GuiRoutines.updateHardDriveDisplay();
-                    // Reset the third Partition
-                    _MemoryManager.resetPartition(512);
-                    // Get the Process residing in memory
+                    if (_MemoryManager.partitionThreeEmpty != true) {
+                        // Take the process in partition 3 of memory and "roll in" to disk
+                        var forDisk = _Memory.addressSpace.splice(512);
+                        _krnFileDriver.rollIn(forDisk, _PartitionThreePCB);
+                        // Reset the third Partition
+                        _MemoryManager.resetPartition(512);
+                    }
+                    // Get the Process residing in disk and "roll out" to memory
                     var key = _ReadyQueue.q[0].locationInMemory;
                     var forMainMemory = _krnFileDriver.rollOut(key, _ReadyQueue.q[0].memorySegementAmount);
                     _MemoryManager.loadMemory(_ReadyQueue.q[0], forMainMemory);
+                    // Data Editing to ensure correctness of swappable process and partition
                     _ReadyQueue.q[0].processInMemory = false;
                     _ReadyQueue.q[0].locationInMemory = "";
                     _PartitionThreePCB = _ReadyQueue.q[0];
+                    // Delete the data for the "rolled out" process to make space for other stuff
+                    _krnFileDriver.deleteFileName(key);
+                    _krnFileDriver.deleteContent(key);
+                    _GuiRoutines.updateHardDriveDisplay();
                     // Set the mm partition three empty to false here
+                    _MemoryManager.partitionThreeEmpty = false;
                     _GuiRoutines.updateMemoryDisplay();
                 }
                 _ReadyQueue.q[0].processState = "Running";

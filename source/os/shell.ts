@@ -564,6 +564,7 @@ module TSOS {
 
                             // Make an array of the input split it by space
                             var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                            // This while loop is necessary for proper HTML5 Session Storage
                             while(forMemory.length != 256){
                                 forMemory.push("00");
                             }
@@ -594,6 +595,7 @@ module TSOS {
 
                         //Make an array of the input split it by space
                         var forMemory = (<HTMLTextAreaElement>document.getElementById("taProgramInput")).value.split(" ");
+                        // This while loop is necessary for proper HTML5 Session Storage
                         while(forMemory.length != 256){
                                 forMemory.push("00");
                             }
