@@ -319,7 +319,7 @@ module TSOS {
                     break;
                     default:
                         if(inputArray[i].length > 2){
-                            inputArray[i] = inputArray.substring(0, 2);
+                            inputArray[i] = inputArray[i].charAt(0) + inputArray[i].charAt(1);
                         }
                         content = content + inputArray[i];
                     break;
@@ -381,50 +381,3 @@ module TSOS {
 }
 
 
-/* 
-
-
-            if(results.length > len){
-                var trim = results.length - len;
-                results = results.slice(0, trim);
-                return results; 
-            }
-
-
-    else {
-              var newKey = value.charAt(1) + value.charAt(2) + value.charAt(3);
-              var newLen = results.length - len;
-              var forConcat = this.rollOut(newKey, newLen);
-              results.concat(forConcat);
-              return results;
-            }          
-
-
-
-        public rollOut(outputArray, pcb, key){
-            // Get the value 
-            var value = sessionStorage.getItem(key);
-            var j = 4;
-
-            _StdOut.putText("Roll Out");
-            // While the value isn't a placeholder or finished, push to output
-            while(value.charAt(j) != '0' && j != value.length){
-                var temp = value.charAt(j) + value.charAt(j+1);
-                outputArray.push(temp);
-                j += 2;
-            }
-
-            // Check if the file is pointing to another index with content
-            // If so recursively call this function with that index
-            var nextIndex = value.charAt(1) + value.charAt(2) + value.charAt(3);
-            if(nextIndex != "000"){
-                this.rollOut(outputArray, pcb, nextIndex);
-            } else {
-                // Send the pcb and the array to be loaded by the Memory Manager
-                // Set the third partition to this pcb
-                pcb.processInMemory = false;
-                _PartitionThreePCB = pcb;
-                _MemoryManager.loadMemory(pcb, outputArray);
-            }
-        }
-*/
