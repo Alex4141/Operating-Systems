@@ -56,13 +56,9 @@ var TSOS;
             If a second and third process are running, increase their wait time and turnaround time
             */
             _ReadyQueue.q[0].tTime += 1;
-            if (_ReadyQueue.q[1]) {
-                _ReadyQueue.q[1].waitTime += 1;
-                _ReadyQueue.q[1].tTime += 1;
-            }
-            if (_ReadyQueue.q[2]) {
-                _ReadyQueue.q[2].waitTime += 1;
-                _ReadyQueue.q[2].tTime += 1;
+            for (var i = 1; i < _ReadyQueue.getSize(); i++) {
+                _ReadyQueue.q[i].waitTime += 1;
+                _ReadyQueue.q[i].tTime += 1;
             }
             var instructionLocation = 1;
             switch (_Memory.addressSpace[this.PC]) {
