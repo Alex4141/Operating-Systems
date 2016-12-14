@@ -318,8 +318,9 @@ module TSOS {
                         content = content + inputArray[i];
                     break;
                     default:
+                        // This is a subtle fix to a problem that occurrs when a program is a full 256 bytes
                         if(inputArray[i].length > 2){
-                            inputArray[i] = inputArray[i].charAt(0) + inputArray[i].charAt(1);
+                            inputArray[i] = inputArray[i].charAt(1) + inputArray[i].charAt(2);
                         }
                         content = content + inputArray[i];
                     break;
